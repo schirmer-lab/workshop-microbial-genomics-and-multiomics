@@ -57,19 +57,13 @@ From the project root:
 
 ```bash
 cd docker
-docker build -t your-dockerhub-username/course-pilot:latest .
+./docker/build.sh
 ```
 
-### Test the Image
+### Push to Docker Hub 
 
 ```bash
-docker run -it --rm your-dockerhub-username/course-pilot:latest bash
-```
-
-### Push to Docker Hub
-
-```bash
-docker push your-dockerhub-username/course-pilot:latest
+docker push schirmerlab/biodev:1.0 
 ```
 
 ## Updating Dependencies

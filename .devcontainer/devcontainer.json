@@ -8,6 +8,23 @@
   // "dockerFile": "../docker/Dockerfile",
   // "context": "../docker",
   
+  // Provide a command to keep container running
+  "overrideCommand": true,
+  
+  // Create data directory on host before container starts
+  "initializeCommand": "mkdir -p ${localEnv:HOME}/data",
+  
+  // Mount user's data directory with proper user mapping
+  "mounts": [
+    "type=bind,source=${localEnv:HOME}/data,target=/data,consistency=cached"
+  ],
+  
+  // Handle cross-platform file permissions
+  "remoteUser": "root",
+  
+  // Comprehensive permission setup for seamless host-container file operations
+  "postCreateCommand": "bash -c 'mkdir -p /data && chmod 777 /data && echo \"# File permission settings for cross-platform compatibility\" >> /root/.bashrc && echo \"umask 0000\" >> /root/.bashrc && echo \"export JUPYTER_ALLOW_INSECURE_WRITES=1\" >> /root/.bashrc && find /data -type d -exec chmod 777 {} + 2>/dev/null || true && find /data -type f -exec chmod 666 {} + 2>/dev/null || true'",
+  
   "customizations": {
     "vscode": {
       "extensions": [
@@ -18,13 +35,12 @@
       ],
       "settings": {
         "python.defaultInterpreterPath": "/opt/conda/bin/python",
-        "jupyter.kernels.trusted": [
-          "/opt/conda/share/jupyter/kernels/ir"
-        ]
+        "python.terminal.activateEnvironment": false,
+        "r.rterm.linux": "/usr/bin/R",
+        "r.rpath.linux": "/usr/bin/R",
+        "jupyter.jupyterServerType": "local",
+        "terminal.integrated.defaultProfile.linux": "bash"
       }
     }
-  },
-  
-  // Post-create command to verify kernels
-  "postCreateCommand": "bash -c 'source ~/micromamba/etc/profile.d/micromamba.sh && micromamba activate course-pilot && echo \"Available Jupyter kernels:\" && jupyter kernelspec list'"
+  }
 }

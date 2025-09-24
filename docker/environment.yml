@@ -31,7 +31,7 @@ dependencies:
   - bioconda::seqkit
   - bioconda::flye
   - bioconda::fastani
-  # - bioconda::prokka
+  # - bioconda::prokka # This is not working (solving package never finishes)
   - bioconda::fastp
   - bioconda::bamtools
 
