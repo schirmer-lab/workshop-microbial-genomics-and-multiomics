@@ -1,6 +1,13 @@
 {
-  "name": "R with Jupyter",
-  "dockerFile": "Dockerfile",
+  "name": "Course Pilot - R with Jupyter",
+  
+  // Option 1: Use published Docker image (default)
+  "image": "your-dockerhub-username/course-pilot:latest",
+  
+  // Option 2: Build locally (uncomment the lines below and comment out the "image" line above)
+  // "dockerFile": "../docker/Dockerfile",
+  // "context": "../docker",
+  
   "customizations": {
     "vscode": {
       "extensions": [
@@ -17,7 +24,7 @@
       }
     }
   },
-  "forwardPorts": [8888],
-  "postCreateCommand": "echo 'Dev container setup complete!'",
-  "remoteUser": "vscode"
+  
+  // Post-create command to verify kernels
+  "postCreateCommand": "bash -c 'source ~/micromamba/etc/profile.d/micromamba.sh && micromamba activate course-pilot && echo \"Available Jupyter kernels:\" && jupyter kernelspec list'"
 }

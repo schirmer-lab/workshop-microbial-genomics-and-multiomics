@@ -1,0 +1,46 @@
+# Ubuntu system packages
+# Essential build tools
+build-essential
+git
+curl
+wget
+vim
+nano
+htop
+tree
+
+# R and R development packages
+r-base
+r-base-dev
+
+# System libraries for R packages
+libcurl4-openssl-dev
+libssl-dev
+libxml2-dev
+libfontconfig1-dev
+libharfbuzz-dev
+libfribidi-dev
+libfreetype6-dev
+libpng-dev
+libtiff-dev
+libjpeg-dev
+
+# Additional system libraries that might be needed
+libgit2-dev
+libssh2-1-dev
+libsasl2-dev
+imagemagick
+libmagick++-dev
+
+# LaTeX for R markdown (optional but useful)
+texlive-latex-base
+texlive-fonts-recommended
+
+# Additional dependencies for bioinformatics tools
+zlib1g-dev
+libbz2-dev
+liblzma-dev
+libncurses-dev
+autoconf
+pkg-config
+libhdf5-dev
