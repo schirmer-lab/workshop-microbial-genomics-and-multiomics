@@ -1,4 +1,3 @@
-name: course-pilot
 channels:
   - conda-forge
   - bioconda
@@ -16,15 +15,15 @@ dependencies:
   - tqdm
 
   # Jupyter (from conda-forge)
-  - jupyter
-  - jupyterlab
-  - notebook
-  - ipykernel
-  - nbconvert
-  - ipywidgets
+  - conda-forge::biopython
+  - conda-forge::jupyter
+  - conda-forge::jupyterlab
+  - conda-forge::notebook
+  - conda-forge::ipykernel
+  - conda-forge::nbconvert
+  - conda-forge::ipywidgets
 
   # Bioinformatics (explicitly from bioconda)
-  - bioconda::biopython
   - bioconda::samtools
   - bioconda::bcftools
   - bioconda::bedtools
@@ -32,7 +31,7 @@ dependencies:
   - bioconda::seqkit
   - bioconda::flye
   - bioconda::fastani
-  - bioconda::prokka
+  # - bioconda::prokka
   - bioconda::fastp
   - bioconda::bamtools
 

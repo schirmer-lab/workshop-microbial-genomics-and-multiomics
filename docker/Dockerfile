@@ -1,44 +1,46 @@
-# syntax=docker/dockerfile:1.7-labs
 FROM ubuntu:24.04
 
-ENV DEBIAN_FRONTEND=noninteractive TZ=UTC
-
-# Micromamba base
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=UTC
 ENV MAMBA_ROOT_PREFIX=/opt/conda
 ENV PATH=/opt/conda/bin:$PATH
-ENV MAMBA_NO_BANNER=1 MAMBA_EXTRACT_THREADS=0 MAMBA_DOWNLOAD_THREADS=8
 
-# Bring inputs
-COPY packages.txt /tmp/packages.txt
-COPY environment.yml /tmp/environment.yml          # for documentation/reference
-COPY conda-linux-64.lock /tmp/conda-linux-64.lock  # created on host; see commands below
-COPY r_packages.R /tmp/r_packages.R                # optional
-
-# System packages
-RUN set -eux; \
-    sed -i 's/\r$//' /tmp/packages.txt; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends ca-certificates gnupg curl wget bzip2; \
-    grep -vE '^\s*#|^\s*$' /tmp/packages.txt > /tmp/packages.clean; \
-    xargs -a /tmp/packages.clean -r apt-get install -y --no-install-recommends; \
+# Install base system packages
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ca-certificates curl bzip2 && \
     rm -rf /var/lib/apt/lists/*
 
-# Micromamba install + explicit install from lock (no solver)
-RUN --mount=type=cache,target=/opt/conda/pkgs \
-    --mount=type=cache,target=/root/.cache/mamba \
-    set -eux; \
+# Copy and install system packages from packages.txt
+COPY packages.txt /tmp/packages.txt
+RUN set -eux; \
+    sed -i 's/\r$//' /tmp/packages.txt || true; \
+    if [ -s /tmp/packages.txt ]; then \
+        apt-get update; \
+        grep -vE '^\s*#|^\s*$' /tmp/packages.txt | xargs apt-get install -y --no-install-recommends; \
+        rm -rf /var/lib/apt/lists/*; \
+    fi; \
+    rm -rf /tmp/packages.txt
+
+# Install micromamba
+RUN set -eux; \
     curl -L https://micro.mamba.pm/api/micromamba/linux-64/latest -o /tmp/micromamba.tar.bz2; \
     mkdir -p /usr/local/bin; \
     tar -xvj -C /usr/local/bin -f /tmp/micromamba.tar.bz2 bin/micromamba --strip-components=1; \
-    rm -f /tmp/micromamba.tar.bz2; \
-    mkdir -p "$MAMBA_ROOT_PREFIX"; \
-    printf "channels:\n  - conda-forge\n  - bioconda\nchannel_priority: strict\n" > "$MAMBA_ROOT_PREFIX/.condarc"; \
-    # FIXED: Use 'micromamba create' with the lock file to skip the slow solver.
-    micromamba create -y -n base --file /tmp/conda-linux-64.lock; \
-    micromamba clean --all --yes
+    rm /tmp/micromamba.tar.bz2
 
-# Make the kernel show up immediately
-RUN set -eux; \
-    python -m ipykernel install --sys-prefix --name course-pilot --display-name "Python (course-pilot)"
+# Copy and install packages from environment.yml in base environment
+COPY environment.yml /tmp/environment.yml
+RUN /usr/local/bin/micromamba install -y -f /tmp/environment.yml && \
+    /usr/local/bin/micromamba clean -a -y && \
+    rm -rf /tmp/environment.yml
+
+# Copy and install R packages
+COPY r_packages.R /tmp/r_packages.R
+RUN Rscript /tmp/r_packages.R && \
+    rm -rf /tmp/r_packages.R
+
+# Install Jupyter kernels
+RUN /usr/local/bin/micromamba run python -m ipykernel install --sys-prefix && \
+    R -e "IRkernel::installspec(user = FALSE)"
 
 WORKDIR /workspace

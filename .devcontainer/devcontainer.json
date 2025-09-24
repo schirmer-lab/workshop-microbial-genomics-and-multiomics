@@ -2,7 +2,7 @@
   "name": "Course Pilot - R with Jupyter",
   
   // Option 1: Use published Docker image (default)
-  "image": "your-dockerhub-username/course-pilot:latest",
+  "image": "schirmerlab/biodev:1.0",
   
   // Option 2: Build locally (uncomment the lines below and comment out the "image" line above)
   // "dockerFile": "../docker/Dockerfile",
