@@ -2,13 +2,10 @@ name: course-pilot
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
+  # Core scientific computing (from conda-forge)
   - python=3.10
   - pip
-  - mamba
-
-  # Core scientific computing packages
   - numpy
   - pandas
   - matplotlib
@@ -18,7 +15,7 @@ dependencies:
   - h5py
   - tqdm
 
-  # Jupyter environment
+  # Jupyter (from conda-forge)
   - jupyter
   - jupyterlab
   - notebook
@@ -26,23 +23,21 @@ dependencies:
   - nbconvert
   - ipywidgets
 
-  # Bioinformatics packages (conda/bioconda)
-  - biopython
-  - samtools
-  - bcftools
-  - bedtools
-  - minimap2
-  - seqkit
-  - flye
-  - fastani
-  - prokka
-  - fastp
-  - bamtools
+  # Bioinformatics (explicitly from bioconda)
+  - bioconda::biopython
+  - bioconda::samtools
+  - bioconda::bcftools
+  - bioconda::bedtools
+  - bioconda::minimap2
+  - bioconda::seqkit
+  - bioconda::flye
+  - bioconda::fastani
+  - bioconda::prokka
+  - bioconda::fastp
+  - bioconda::bamtools
 
-  # Nanopore-specific tools
-  - nanofilt
-  - nanoplot
-  - rasusa
-  - porechop_abi  # fork compatible with modern Python
-
-  # pip packages are installed separately in Dockerfile for better error handling
+  # Nanopore tools (explicitly from bioconda)
+  - bioconda::nanofilt
+  - bioconda::nanoplot
+  - bioconda::rasusa
+  - bioconda::porechop_abi

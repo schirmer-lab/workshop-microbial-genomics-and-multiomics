@@ -1,51 +1,44 @@
-# Use Ubuntu 24.04 as base
+# syntax=docker/dockerfile:1.7-labs
 FROM ubuntu:24.04
 
-# Set environment variables to prevent interactive prompts
-ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ=UTC
+ENV DEBIAN_FRONTEND=noninteractive TZ=UTC
 
-# Copy dependency files
+# Micromamba base
+ENV MAMBA_ROOT_PREFIX=/opt/conda
+ENV PATH=/opt/conda/bin:$PATH
+ENV MAMBA_NO_BANNER=1 MAMBA_EXTRACT_THREADS=0 MAMBA_DOWNLOAD_THREADS=8
+
+# Bring inputs
 COPY packages.txt /tmp/packages.txt
-COPY environment.yml /tmp/environment.yml
-COPY r_packages.R /tmp/r_packages.R
+COPY environment.yml /tmp/environment.yml          # for documentation/reference
+COPY conda-linux-64.lock /tmp/conda-linux-64.lock  # created on host; see commands below
+COPY r_packages.R /tmp/r_packages.R                # optional
 
-# System packages (APT) — keep Ubuntu's default repo config; ignore comments in packages.txt
+# System packages
 RUN set -eux; \
-    # Normalize CRLF if any
     sed -i 's/\r$//' /tmp/packages.txt; \
     apt-get update; \
-    # Base tools needed early
     apt-get install -y --no-install-recommends ca-certificates gnupg curl wget bzip2; \
-    # Filter comments/blank lines, then install
     grep -vE '^\s*#|^\s*$' /tmp/packages.txt > /tmp/packages.clean; \
     xargs -a /tmp/packages.clean -r apt-get install -y --no-install-recommends; \
     rm -rf /var/lib/apt/lists/*
 
-# ----- Micromamba install & make env immediately available -----
-ENV MAMBA_ROOT_PREFIX=/opt/conda
-ENV PATH=/opt/conda/bin:$PATH
-
-RUN set -eux; \
-    # Install micromamba (static binary)
+# Micromamba install + explicit install from lock (no solver)
+RUN --mount=type=cache,target=/opt/conda/pkgs \
+    --mount=type=cache,target=/root/.cache/mamba \
+    set -eux; \
     curl -L https://micro.mamba.pm/api/micromamba/linux-64/latest -o /tmp/micromamba.tar.bz2; \
     mkdir -p /usr/local/bin; \
     tar -xvj -C /usr/local/bin -f /tmp/micromamba.tar.bz2 bin/micromamba --strip-components=1; \
     rm -f /tmp/micromamba.tar.bz2; \
-    # Prepare root prefix and strict channels
-    mkdir -p "${MAMBA_ROOT_PREFIX}"; \
-    printf "channels:\n  - conda-forge\n  - bioconda\n  - defaults\nchannel_priority: strict\n" > "${MAMBA_ROOT_PREFIX}/.condarc"; \
-    # IMPORTANT: install into the base env at the root prefix (do NOT 'create -p $MAMBA_ROOT_PREFIX')
-    micromamba install -y -r "${MAMBA_ROOT_PREFIX}" -n base -f /tmp/environment.yml; \
-    # Clean caches
+    mkdir -p "$MAMBA_ROOT_PREFIX"; \
+    printf "channels:\n  - conda-forge\n  - bioconda\nchannel_priority: strict\n" > "$MAMBA_ROOT_PREFIX/.condarc"; \
+    # FIXED: Use 'micromamba create' with the lock file to skip the slow solver.
+    micromamba create -y -n base --file /tmp/conda-linux-64.lock; \
     micromamba clean --all --yes
 
-# Register a Jupyter kernel for the env (immediately available)
+# Make the kernel show up immediately
 RUN set -eux; \
     python -m ipykernel install --sys-prefix --name course-pilot --display-name "Python (course-pilot)"
 
-# (Optional) Install R packages
-# RUN Rscript /tmp/r_packages.R
-
-# Default workdir
 WORKDIR /workspace
