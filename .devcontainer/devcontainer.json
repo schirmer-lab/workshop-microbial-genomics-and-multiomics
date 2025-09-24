@@ -1,0 +1,23 @@
+{
+  "name": "R with Jupyter",
+  "dockerFile": "Dockerfile",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-toolsai.jupyter",
+        "ms-python.python",
+        "reditorsupport.r",
+        "REditorSupport.r-lsp"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/opt/conda/bin/python",
+        "jupyter.kernels.trusted": [
+          "/opt/conda/share/jupyter/kernels/ir"
+        ]
+      }
+    }
+  },
+  "forwardPorts": [8888],
+  "postCreateCommand": "echo 'Dev container setup complete!'",
+  "remoteUser": "vscode"
+}
