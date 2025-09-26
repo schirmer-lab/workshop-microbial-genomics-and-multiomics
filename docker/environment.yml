@@ -42,3 +42,27 @@ dependencies:
   - bioconda::porechop_abi
   - bioconda::filtlong
   - bioconda::lrge
+
+  # R and R packages (from conda-forge) - let conda resolve versions
+  - conda-forge::r-base=4.3.*
+  - conda-forge::r-irkernel
+  
+  # Install meta-package first to get consistent versions
+  - conda-forge::r-tidyverse
+  
+  # Core R packages
+  - conda-forge::r-devtools
+  - conda-forge::r-remotes
+  - conda-forge::r-biocmanager
+  
+  # Visualization packages (tidyverse should provide compatible ggplot2)
+  - conda-forge::r-ggpubr
+  
+  # Specialized packages
+  - conda-forge::r-vegan
+  - conda-forge::r-fossil
+  - conda-forge::r-taxonomizr
+  - conda-forge::r-languageserver
+
+  # R Bioconductor packages (from bioconda)
+  - bioconda::bioconductor-maaslin2
