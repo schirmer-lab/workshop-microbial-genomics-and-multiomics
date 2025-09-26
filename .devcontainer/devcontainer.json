@@ -12,18 +12,18 @@
   "overrideCommand": true,
 
   // Create data directory on host before container starts
-  "initializeCommand": "mkdir -p ${localEnv:HOME}/data",
+  "initializeCommand": "mkdir -p ${localEnv:HOME}/biodata",
 
   // Mount user's data directory with proper user mapping
   "mounts": [
-    "type=bind,source=${localEnv:HOME}/data,target=/data,consistency=cached"
+    "type=bind,source=${localEnv:HOME}/biodata,target=/biodata,consistency=cached"
   ],
 
   // Handle cross-platform file permissions
   "remoteUser": "root",
 
   // Comprehensive permission setup for seamless host-container file operations
-  "postCreateCommand": "bash -c 'mkdir -p /data && chmod 777 /data && echo \"# File permission settings for cross-platform compatibility\" >> /root/.bashrc && echo \"umask 0000\" >> /root/.bashrc && echo \"export JUPYTER_ALLOW_INSECURE_WRITES=1\" >> /root/.bashrc && find /data -type d -exec chmod 777 {} + 2>/dev/null || true && find /data -type f -exec chmod 666 {} + 2>/dev/null || true'",
+  "postCreateCommand": "bash -c 'mkdir -p /biodata && chmod 777 /biodata && echo \"# File permission settings for cross-platform compatibility\" >> /root/.bashrc && echo \"umask 0000\" >> /root/.bashrc && echo \"export JUPYTER_ALLOW_INSECURE_WRITES=1\" >> /root/.bashrc && find /biodata -type d -exec chmod 777 {} + 2>/dev/null || true && find /biodata -type f -exec chmod 666 {} + 2>/dev/null || true'",
 
   "customizations": {
     "vscode": {
