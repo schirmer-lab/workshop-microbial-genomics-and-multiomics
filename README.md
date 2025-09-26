@@ -34,6 +34,8 @@ Before you can use this development environment, make sure you have the followin
 2. When prompted, click "Reopen in Container"
 3. The development environment will be ready with all dependencies installed
 
+> **Note**: If you're updating from a previous version, you may need to rebuild the container to get the latest improvements. Use `Ctrl+Shift+P` → "Dev Containers: Rebuild Container" to ensure you have the latest setup.
+
 ## Docker Setup
 
 This project uses a modular Docker setup with separate dependency files:
@@ -47,11 +49,44 @@ By default, the dev container uses a pre-built image from Docker Hub for faster 
 
 See `docker/README.md` for detailed Docker setup and usage instructions.
 
+## Working with R Notebooks
+
+### First Time Setup - Selecting the R Kernel
+
+When you first open an R notebook (like `hello-world-r.ipynb`), you'll need to select the appropriate kernel:
+
+1. **Open the R notebook** file in VS Code
+2. **Click "Select Kernel"** button in the top-right corner of the notebook interface
+3. **Choose "Jupyter Kernel..."** from the dropdown menu
+4. **Look for the R kernel** - it will be listed under "Jupyter Kernels" section as **"R"**
+
+> **Important**: The R kernel appears under the "Jupyter Kernels" section, not under language-specific kernels. Look for an entry simply labeled "R".
+
+### R Language Server
+
+The first time you work with R files, you might see a popup asking about installing the R `languageserver` package. This has been **pre-installed** in the container to provide enhanced R features like:
+- Code completion and IntelliSense
+- Function signatures and documentation
+- Error detection and linting
+
+If you still see this popup, simply click "Yes" or "No" based on your preference - the package is already available.
+
+### Troubleshooting
+
+**Can't find the R kernel?**
+- Ensure you're looking in the "Jupyter Kernels" section, not other categories
+- Try refreshing the kernel list or restarting VS Code
+- Verify the dev container has fully loaded (check the bottom-left corner for "Dev Container" indicator)
+
+**R code not executing?**
+- Make sure you've selected the R kernel (see instructions above)
+- Check that the cell type is set to "Code" not "Markdown"
+
 ## Features
 
 - **Python 3.10**: Scientific computing stack (NumPy, Pandas, Matplotlib, etc.)
-- **R**: Statistical analysis packages (ggplot2, dplyr, vegan, etc.)
+- **R**: Statistical analysis packages (ggplot2, dplyr, vegan, etc.) with pre-configured language server
 - **Bioinformatics Tools**: Comprehensive suite including samtools, bcftools, bedtools, minimap2, flye, prokka, and nanopore analysis tools
-- **Jupyter Kernels**: Both Python and R kernels available in VS Code
+- **Jupyter Kernels**: Both Python and R kernels available in VS Code with seamless integration
 - **VS Code Integration**: Pre-configured extensions and settings for notebook development
 - **Ubuntu 24.04**: Clean, modern base system with micromamba for package management
