@@ -40,3 +40,4 @@ dependencies:
   - bioconda::nanoplot
   - bioconda::rasusa
   - bioconda::porechop_abi
+  - bioconda::filtlong
