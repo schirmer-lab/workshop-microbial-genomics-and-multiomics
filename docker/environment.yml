@@ -41,3 +41,4 @@ dependencies:
   - bioconda::rasusa
   - bioconda::porechop_abi
   - bioconda::filtlong
+  - bioconda::lrge
