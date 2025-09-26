@@ -32,8 +32,13 @@ bio_packages <- c(
   "taxonomizr"     # Taxonomic analysis
 )
 
+# VS Code integration packages
+vscode_packages <- c(
+  "languageserver" # R Language Server for VS Code integration
+)
+
 # Combine all packages
-all_packages <- c(core_packages, data_packages, stats_packages, bio_packages)
+all_packages <- c(core_packages, data_packages, stats_packages, bio_packages, vscode_packages)
 
 # Install packages
 cat("Installing R packages...\n")
@@ -49,7 +54,7 @@ if (require("IRkernel", quietly = TRUE)) {
   cat("Installing IRkernel for Jupyter...\n")
   # Install for the current user since we're running as vscode user
   IRkernel::installspec(user = TRUE)
-  
+
   # Also install system-wide if possible
   tryCatch({
     IRkernel::installspec(user = FALSE)

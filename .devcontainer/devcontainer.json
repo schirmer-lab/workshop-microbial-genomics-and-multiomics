@@ -1,30 +1,30 @@
 {
   "name": "Course Pilot - R with Jupyter",
-  
+
   // Option 1: Use published Docker image (default)
   "image": "schirmerlab/biodev:1.0",
-  
+
   // Option 2: Build locally (uncomment the lines below and comment out the "image" line above)
   // "dockerFile": "../docker/Dockerfile",
   // "context": "../docker",
-  
+
   // Provide a command to keep container running
   "overrideCommand": true,
-  
+
   // Create data directory on host before container starts
   "initializeCommand": "mkdir -p ${localEnv:HOME}/data",
-  
+
   // Mount user's data directory with proper user mapping
   "mounts": [
     "type=bind,source=${localEnv:HOME}/data,target=/data,consistency=cached"
   ],
-  
+
   // Handle cross-platform file permissions
   "remoteUser": "root",
-  
+
   // Comprehensive permission setup for seamless host-container file operations
   "postCreateCommand": "bash -c 'mkdir -p /data && chmod 777 /data && echo \"# File permission settings for cross-platform compatibility\" >> /root/.bashrc && echo \"umask 0000\" >> /root/.bashrc && echo \"export JUPYTER_ALLOW_INSECURE_WRITES=1\" >> /root/.bashrc && find /data -type d -exec chmod 777 {} + 2>/dev/null || true && find /data -type f -exec chmod 666 {} + 2>/dev/null || true'",
-  
+
   "customizations": {
     "vscode": {
       "extensions": [
@@ -38,7 +38,12 @@
         "python.terminal.activateEnvironment": false,
         "r.rterm.linux": "/usr/bin/R",
         "r.rpath.linux": "/usr/bin/R",
+        "r.lsp.enabled": true,
+        "r.bracketedPaste": true,
         "jupyter.jupyterServerType": "local",
+        "jupyter.kernels.trusted": [
+          "/opt/conda/share/jupyter/kernels/ir"
+        ],
         "terminal.integrated.defaultProfile.linux": "bash"
       }
     }
