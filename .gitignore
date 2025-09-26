@@ -76,7 +76,7 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *.cover
-*.py,cover
+*.py.cover
 
 # mypy
 .mypy_cache/
@@ -126,7 +126,6 @@ ipython_config.py
 **/.dockerignore
 Dockerfile*
 docker-compose*.yml
-*.log
 *.pid
 
 # Devcontainer
@@ -137,7 +136,6 @@ docker-compose*.yml
 # Logs and temp files
 #------------------------------------------------------------------------------
 
-*.log
 *.tmp
 *.temp
 *.bak
