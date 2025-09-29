@@ -8,8 +8,7 @@ This repository uses Docker to provide a consistent development environment with
 docker/
 ├── Dockerfile          # Docker image definition
 ├── packages.txt        # Ubuntu system packages
-├── environment.yml     # Python packages (conda)
-└── r_packages.R       # R packages installation script
+└── environment.yml     # Python and R packages (conda)
 ```
 
 ## Using the Environment
@@ -32,8 +31,7 @@ If you need to modify dependencies or build a custom image:
 
 1. Edit the dependency files as needed:
    - `docker/packages.txt` - Add/remove Ubuntu packages
-   - `docker/environment.yml` - Add/remove Python packages
-   - `docker/r_packages.R` - Add/remove R packages
+   - `docker/environment.yml` - Add/remove Python and R packages
 
 2. Switch to local building by editing `.devcontainer/devcontainer.json`:
    ```json
@@ -107,18 +105,23 @@ dependencies:
 
 ### Adding R Packages
 
-Edit `docker/r_packages.R` and add to the appropriate package list:
+Edit `docker/environment.yml` and add R packages using conda-forge or bioconda channels:
 
-```r
-# Add to existing package lists or create new ones
-new_packages <- c(
-  "your-r-package",
-  "another-r-package"
-)
-
-# Add to all_packages list
-all_packages <- c(core_packages, data_packages, stats_packages, bio_packages, new_packages)
+```yaml
+dependencies:
+  # R packages from conda-forge
+  - conda-forge::r-your-package
+  - conda-forge::r-another-package
+  
+  # R Bioconductor packages from bioconda
+  - bioconda::bioconductor-yourpackage
 ```
+
+**Benefits of conda-managed R packages:**
+- Pre-compiled binaries (no compilation errors)
+- Automatic system dependency management
+- Consistent dependency resolution
+- Faster, more reliable installations
 
 ## Switching Between Modes
 

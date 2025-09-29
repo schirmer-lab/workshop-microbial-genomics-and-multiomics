@@ -43,7 +43,7 @@ This project uses a modular Docker setup with separate dependency files:
 - `docker/Dockerfile` - Main Docker image definition
 - `docker/packages.txt` - Ubuntu system packages
 - `docker/environment.yml` - Python packages (conda)
-- `docker/r_packages.R` - R packages
+- `docker/environment.yml` - Python and R packages (conda)
 
 By default, the dev container uses a pre-built image from Docker Hub for faster startup. You can switch to local building when you need to modify dependencies.
 

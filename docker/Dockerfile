@@ -1,5 +1,7 @@
+# Use Ubuntu 24.04 as base
 FROM ubuntu:24.04
 
+# Set environment variables to prevent interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
 ENV MAMBA_ROOT_PREFIX=/opt/conda
@@ -34,13 +36,14 @@ RUN /usr/local/bin/micromamba install -y -f /tmp/environment.yml && \
     /usr/local/bin/micromamba clean -a -y && \
     rm -rf /tmp/environment.yml
 
-# Copy and install R packages
-COPY r_packages.R /tmp/r_packages.R
-RUN Rscript /tmp/r_packages.R && \
-    rm -rf /tmp/r_packages.R
-
 # Install Jupyter kernels
 RUN /usr/local/bin/micromamba run python -m ipykernel install --sys-prefix && \
     R -e "IRkernel::installspec(user = FALSE)"
+
+# Copy and run comprehensive environment test
+COPY test_environment.sh /tmp/test_environment.sh
+RUN chmod +x /tmp/test_environment.sh && \
+    /tmp/test_environment.sh && \
+    rm /tmp/test_environment.sh
 
 WORKDIR /workspace
