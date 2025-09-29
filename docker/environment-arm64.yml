@@ -34,8 +34,8 @@ dependencies:
   - conda-forge::r-ggpubr
   - conda-forge::r-vegan
   - conda-forge::r-languageserver
-  - conda-forge::r-fossil
-  - conda-forge::r-taxonomizr
+#  - conda-forge::r-fossil
+#  - conda-forge::r-taxonomizr
 
   # Bioinformatics (ARM64-compatible subset from bioconda)
   - bioconda::samtools
@@ -49,13 +49,12 @@ dependencies:
   - bioconda::seqkit
   - bioconda::flye
   - bioconda::fastani
-  - bioconda::prokka # This is not working (solving package never finishes)
+#  - bioconda::prokka # This is not working (solving package never finishes)
   - bioconda::fastp
   - bioconda::bamtools
   - bioconda::blast
   - bioconda::mmseqs2
   - bioconda::bwa
-  - bioconda::checkm-genome
 
   # Illumina tools
   - bioconda::trim-galore
@@ -75,3 +74,7 @@ dependencies:
 
   # R Bioconductor packages (from bioconda)
   - bioconda::bioconductor-maaslin2
+
+  # pip managed dependencies
+  - pip:
+    - checkm-genome
