@@ -1,8 +1,8 @@
-# Platform-specific environment configurations
-# This file contains fallback packages for different architectures
+channels:
+  - conda-forge
+  - bioconda
 
-# Common packages available on all platforms
-common_packages: &common_packages
+dependencies:
   # Core scientific computing (from conda-forge)
   - python=3.10
   - pip
@@ -24,6 +24,12 @@ common_packages: &common_packages
   - conda-forge::nbconvert
   - conda-forge::ipywidgets
 
+  # Specialized packages
+  - conda-forge::r-vegan
+  - conda-forge::r-fossil
+  - conda-forge::r-taxonomizr
+  - conda-forge::r-languageserver
+
   # R and R packages (from conda-forge) - let conda resolve versions
   - conda-forge::r-base=4.3.*
   - conda-forge::r-irkernel
@@ -32,24 +38,33 @@ common_packages: &common_packages
   - conda-forge::r-remotes
   - conda-forge::r-biocmanager
   - conda-forge::r-ggpubr
-  - conda-forge::r-vegan
-  - conda-forge::r-languageserver
 
-# x86_64 specific packages (full bioinformatics suite)
-x86_64_packages: &x86_64_packages
-  # Additional R packages (x86_64 only)
-  - conda-forge::r-fossil
-  - conda-forge::r-taxonomizr
+  # Bioinformatics (full suite for x86_64 from bioconda)
   - bioconda::samtools
+  - bioconda::prodigal
+  - bioconda::cd-hit
+  - bioconda::bowtie2
+  - bioconda::metaphlan==3.0.1
   - bioconda::bcftools
   - bioconda::bedtools
   - bioconda::minimap2
   - bioconda::seqkit
   - bioconda::flye
   - bioconda::fastani
+  - bioconda::prokka # This is not working (solving package never finishes)
   - bioconda::fastp
   - bioconda::bamtools
   - bioconda::blast
+  - bioconda::mmseqs2
+  - bioconda::bwa
+  - bioconda::checkm-genome
+
+  # Illumina tools
+  - bioconda::trim-galore
+  - bioconda::spades
+  - bioconda::multiqc
+
+  # Nanopore tools (explicitly from bioconda)
   - bioconda::nanofilt
   - bioconda::nanoplot
   - bioconda::rasusa
@@ -58,19 +73,7 @@ x86_64_packages: &x86_64_packages
   - bioconda::lrge
   - bioconda::dnaapler
   - bioconda::medaka
-  - bioconda::bioconductor-maaslin2
+  - bioconda::polypolish
 
-# ARM64 packages (reduced set, known to work)
-arm64_packages: &arm64_packages
-  - bioconda::samtools
-  - bioconda::bcftools
-  - bioconda::bedtools
-  - bioconda::minimap2
-  - bioconda::seqkit
-  - bioconda::fastp
-  - bioconda::bamtools
-  - bioconda::blast
-  - bioconda::nanofilt
-  - bioconda::nanoplot
-  # Note: Some packages like lrge, medaka might not be available for ARM64
-  # They will be installed via pip fallback if conda fails
+  # R Bioconductor packages (from bioconda)
+  - bioconda::bioconductor-maaslin2

@@ -51,31 +51,17 @@ RUN set -eux; \
     tar -xvj -C /usr/local/bin -f /tmp/micromamba.tar.bz2 bin/micromamba --strip-components=1; \
     rm /tmp/micromamba.tar.bz2
 
-# Copy environment files and platform-specific script
-COPY environment.yml /tmp/environment.yml
-COPY create_platform_env.sh /tmp/create_platform_env.sh
+# Copy architecture-specific environment file
+COPY environment-${TARGETARCH:-amd64}.yml /tmp/environment.yml
 
-# Create platform-specific environment and install packages
-RUN chmod +x /tmp/create_platform_env.sh && \
-    /tmp/create_platform_env.sh && \
-    echo "Installing conda packages for ${TARGETARCH:-amd64}..." && \
-    ARCH=${TARGETARCH:-amd64} && \
-    ENV_FILE="/tmp/environment-${ARCH}.yml" && \
-    if [ -f "$ENV_FILE" ]; then \
-        echo "Using platform-specific environment: $ENV_FILE"; \
-        /usr/local/bin/micromamba install -y -f "$ENV_FILE" || { \
-            echo "Some packages failed to install, trying with --strict-channel-priority=false"; \
-            /usr/local/bin/micromamba install -y -f "$ENV_FILE" --strict-channel-priority=false; \
-        }; \
-    else \
-        echo "Using default environment: /tmp/environment.yml"; \
-        /usr/local/bin/micromamba install -y -f /tmp/environment.yml || { \
-            echo "Some packages failed to install, trying with relaxed priority"; \
-            /usr/local/bin/micromamba install -y -f /tmp/environment.yml --strict-channel-priority=false; \
-        }; \
-    fi && \
+# Install conda packages
+RUN echo "Installing conda packages for ${TARGETARCH:-amd64}..." && \
+    /usr/local/bin/micromamba install -y -f /tmp/environment.yml || { \
+        echo "Some packages failed to install, trying with --strict-channel-priority=false"; \
+        /usr/local/bin/micromamba install -y -f /tmp/environment.yml --strict-channel-priority=false; \
+    } && \
     /usr/local/bin/micromamba clean -a -y && \
-    rm -rf /tmp/environment*.yml /tmp/create_platform_env.sh
+    rm -rf /tmp/environment.yml
 
 # Install Jupyter kernels
 RUN /usr/local/bin/micromamba run python -m ipykernel install --sys-prefix && \
