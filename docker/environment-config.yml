@@ -1,0 +1,76 @@
+# Platform-specific environment configurations
+# This file contains fallback packages for different architectures
+
+# Common packages available on all platforms
+common_packages: &common_packages
+  # Core scientific computing (from conda-forge)
+  - python=3.10
+  - pip
+  - numpy
+  - pandas
+  - matplotlib
+  - seaborn
+  - scipy
+  - scikit-learn
+  - h5py
+  - tqdm
+
+  # Jupyter (from conda-forge)
+  - conda-forge::biopython
+  - conda-forge::jupyter
+  - conda-forge::jupyterlab
+  - conda-forge::notebook
+  - conda-forge::ipykernel
+  - conda-forge::nbconvert
+  - conda-forge::ipywidgets
+
+  # R and R packages (from conda-forge) - let conda resolve versions
+  - conda-forge::r-base=4.3.*
+  - conda-forge::r-irkernel
+  - conda-forge::r-tidyverse
+  - conda-forge::r-devtools
+  - conda-forge::r-remotes
+  - conda-forge::r-biocmanager
+  - conda-forge::r-ggpubr
+  - conda-forge::r-vegan
+  - conda-forge::r-languageserver
+
+# x86_64 specific packages (full bioinformatics suite)
+x86_64_packages: &x86_64_packages
+  # Additional R packages (x86_64 only)
+  - conda-forge::r-fossil
+  - conda-forge::r-taxonomizr
+  - bioconda::samtools
+  - bioconda::bcftools
+  - bioconda::bedtools
+  - bioconda::minimap2
+  - bioconda::seqkit
+  - bioconda::flye
+  - bioconda::fastani
+  - bioconda::fastp
+  - bioconda::bamtools
+  - bioconda::blast
+  - bioconda::nanofilt
+  - bioconda::nanoplot
+  - bioconda::rasusa
+  - bioconda::porechop_abi
+  - bioconda::filtlong
+  - bioconda::lrge
+  - bioconda::dnaapler
+  - bioconda::medaka
+  - bioconda::bioconductor-maaslin2
+
+# ARM64 packages (reduced set, known to work)
+arm64_packages: &arm64_packages
+  - bioconda::samtools
+  - bioconda::bcftools
+  - bioconda::bedtools
+  - bioconda::minimap2
+  - bioconda::seqkit
+  - bioconda::fastp
+  - bioconda::bamtools
+  - bioconda::blast
+  - bioconda::nanofilt
+  - bioconda::nanoplot
+  # Note: Some packages like lrge, medaka might not be available for ARM64
+  # They will be installed via pip fallback if conda fails

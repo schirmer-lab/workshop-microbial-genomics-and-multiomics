@@ -9,9 +9,25 @@ R --version | head -1
 
 echo -e "\n2. Testing critical R packages..."
 R -e "
-packages <- c('ggplot2', 'tidyverse', 'vegan', 'dplyr', 'stringr', 'ggpubr', 'fossil', 'BiocManager');
+# Architecture-aware package testing
+arch <- Sys.info()[['machine']];
+cat('Testing R packages for architecture:', arch, '\n');
+
+# Common packages available on all architectures
+common_packages <- c('ggplot2', 'tidyverse', 'vegan', 'dplyr', 'stringr', 'ggpubr', 'BiocManager');
+
+# Architecture-specific packages
+arch_specific <- list();
+if (arch %in% c('x86_64', 'amd64')) {
+  arch_specific <- c('fossil', 'taxonomizr');
+  cat('  ℹ️  x86_64 detected - testing additional packages\n');
+} else {
+  cat('  ℹ️  ARM64 detected - skipping packages not available on this architecture\n');
+}
+
+# Combine package lists
+packages <- c(common_packages, arch_specific);
 failed <- 0;
-cat('Testing R packages:\n');
 
 # First check ggplot2 version
 if(require('ggplot2', character.only=TRUE, quietly=TRUE)) {
@@ -93,7 +109,7 @@ import sys
 # Map package names to their import names
 packages = {
     'numpy': 'numpy',
-    'pandas': 'pandas', 
+    'pandas': 'pandas',
     'matplotlib': 'matplotlib',
     'seaborn': 'seaborn',
     'scipy': 'scipy',
@@ -171,18 +187,44 @@ test_data <- data.frame(
 );
 
 # Test dplyr operations
-result <- test_data %>% 
+result <- test_data %>%
   filter(group == 'A') %>%
   summarise(mean_val = mean(value1));
 
 # Test ggplot2 (create plot but don't display)
-p <- ggplot(test_data, aes(x=value1, y=value2, color=group)) + 
-     geom_point() + 
+p <- ggplot(test_data, aes(x=value1, y=value2, color=group)) +
+     geom_point() +
      theme_minimal();
 
 cat('✅ R data processing pipeline working\n');
 cat('✅ dplyr and ggplot2 integration working\n');
 "
 
+echo -e "\n10. Architecture-specific validation..."
+ARCH=$(uname -m)
+echo "Running on architecture: $ARCH"
+
+# Check if we're missing any expected tools based on architecture
+case "$ARCH" in
+    x86_64|amd64)
+        echo "  ✅ Running on x86_64 - full toolset expected"
+        # Check for tools that should be available on x86_64
+        if command -v lrge &> /dev/null; then
+            echo "  ✅ lrge: available"
+        else
+            echo "  ⚠️  lrge: not found (may be expected on some platforms)"
+        fi
+        ;;
+    aarch64|arm64)
+        echo "  ✅ Running on ARM64 - some tools may be unavailable"
+        echo "  💡 This is expected - ARM64 has limited bioconda package availability"
+        ;;
+    *)
+        echo "  ⚠️  Unknown architecture: $ARCH"
+        ;;
+esac
+
 echo -e "\n🎉 All tests passed! Environment is ready for the course."
 echo "Container build completed successfully! 🚀"
+echo "Architecture: $ARCH"
+echo "Build platform: ${TARGETPLATFORM:-unknown}"
