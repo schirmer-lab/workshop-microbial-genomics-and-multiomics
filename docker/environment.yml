@@ -25,18 +25,23 @@ dependencies:
 
   # Bioinformatics (explicitly from bioconda)
   - bioconda::samtools
+  - bioconda::prodigal
+  - bioconda::cd-hit
+  - bioconda::bowtie2
+  - bioconda::metaphlan==3.0.1
   - bioconda::bcftools
   - bioconda::bedtools
   - bioconda::minimap2
   - bioconda::seqkit
   - bioconda::flye
   - bioconda::fastani
-  # - bioconda::prokka # This is not working (solving package never finishes)
+  - bioconda::prokka # This is not working (solving package never finishes)
   - bioconda::fastp
   - bioconda::bamtools
   - bioconda::blast
   - bioconda::mmseqs2
   - bioconda::bwa
+  - bioconda::checkm-genome
 
   # Illumina tools
   - bioconda::trim-galore
