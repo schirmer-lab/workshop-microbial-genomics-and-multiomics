@@ -34,6 +34,14 @@ dependencies:
   # - bioconda::prokka # This is not working (solving package never finishes)
   - bioconda::fastp
   - bioconda::bamtools
+  - bioconda::blast
+  - bioconda::mmseqs2
+  - bioconda::bwa
+
+  # Illumina tools
+  - bioconda::trim-galore
+  - bioconda::spades
+  - bioconda::multiqc
 
   # Nanopore tools (explicitly from bioconda)
   - bioconda::nanofilt
@@ -42,6 +50,9 @@ dependencies:
   - bioconda::porechop_abi
   - bioconda::filtlong
   - bioconda::lrge
+  - bioconda::dnaapler
+  - bioconda::medaka
+  - bioconda::polypolish
 
   # R and R packages (from conda-forge) - let conda resolve versions
   - conda-forge::r-base=4.3.*

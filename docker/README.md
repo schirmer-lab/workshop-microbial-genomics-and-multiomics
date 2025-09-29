@@ -1,144 +1,269 @@
-# Docker Setup for Course Pilot
+# Multi-Architecture Docker Setup for Course Pilot
 
-This repository uses Docker to provide a consistent development environment with Python, R, and Jupyter support.
+This repository provides a consistent bioinformatics development environment with Python, R, and Jupyter support that works reliably across different architectures (Intel/AMD x86_64 and Apple Silicon ARM64).
+
+## 🏗️ Architecture Support
+
+This DevContainer now supports:
+- **Intel/AMD x86_64** (Linux, Windows, older Macs)
+- **Apple Silicon ARM64** (M1/M2/M3 Macs)
+
+The build system automatically detects the target architecture and installs compatible packages.
 
 ## Structure
 
 ```
 docker/
-├── Dockerfile          # Docker image definition
-├── packages.txt        # Ubuntu system packages
-└── environment.yml     # Python and R packages (conda)
+├── Dockerfile              # Multi-arch Docker image definition
+├── packages.txt           # Ubuntu system packages
+├── environment.yml        # Base Python and R packages
+├── create_platform_env.sh # Platform-specific package handler
+├── environment-config.yml # Architecture-specific package lists
+├── build.sh              # Smart build script
+├── build-multiarch.sh    # Multi-platform build script
+├── docker-compose.yml    # Container orchestration
+└── test_environment.sh   # Comprehensive environment testing
 ```
 
-## Using the Environment
+## 🚀 Quick Start
 
-This setup is designed for VS Code development with Jupyter notebooks as `.ipynb` files, not browser-based Jupyter.
-
-### Option 1: Published Docker Image (Default)
-
-The devcontainer is configured to use a pre-built image from Docker Hub:
+### Option 1: Use Pre-built Multi-Arch Image (Recommended)
 
 1. Open the project in VS Code
 2. When prompted, click "Reopen in Container"
-3. VS Code will pull the published image and start the container
-4. Open any `.ipynb` file in VS Code
-5. Select either "Python 3.10 (course-pilot)" or "R" kernel when prompted
+3. VS Code will pull the appropriate image for your architecture
+4. Open any `.ipynb` file and select the Python or R kernel
 
 ### Option 2: Build Locally
 
-If you need to modify dependencies or build a custom image:
-
-1. Edit the dependency files as needed:
-   - `docker/packages.txt` - Add/remove Ubuntu packages
-   - `docker/environment.yml` - Add/remove Python and R packages
-
-2. Switch to local building by editing `.devcontainer/devcontainer.json`:
-   ```json
-   {
-     // Comment out this line:
-     // "image": "your-dockerhub-username/course-pilot:latest",
-     
-     // Uncomment these lines:
-     "dockerFile": "../docker/Dockerfile",
-     "context": "../docker",
-   }
-   ```
-
-3. Rebuild the container: `Ctrl+Shift+P` → "Dev Containers: Rebuild Container"
-
-## Building and Publishing the Docker Image
-
-### Build the Image
-
-From the project root:
-
+#### Single Architecture (Current Platform)
 ```bash
 cd docker
-./docker/build.sh
+./build.sh
 ```
 
-### Push to Docker Hub 
-
+#### Multi-Architecture Build
 ```bash
-docker push schirmerlab/biodev:1.0 
+cd docker
+./build.sh --multi-arch
+# or use the dedicated script
+./build-multiarch.sh
 ```
 
-## Updating Dependencies
+#### Using Docker Compose
+```bash
+# Start development environment
+docker-compose up biodev
 
-### Adding Ubuntu Packages
-
-Edit `docker/packages.txt` and add package names (one per line):
-
+# Test the environment
+docker-compose run --rm biodev-test
 ```
-# Example additions
+
+## 🔧 Building and Publishing
+
+### Prerequisites for Multi-Arch Builds
+
+1. **Docker Buildx** (included in Docker Desktop 19.03+)
+2. **QEMU emulation** (automatically set up by Docker Desktop)
+
+### Build Commands
+
+#### Local Development Build
+```bash
+./build.sh                    # Single arch (faster for development)
+./build.sh --multi-arch      # Multi-arch (for publishing)
+```
+
+#### Publishing Multi-Arch Images
+```bash
+./build-multiarch.sh
+# Follow the prompts to push to registry
+```
+
+### Manual Multi-Arch Build
+```bash
+# Create buildx builder
+docker buildx create --name biodev-builder --driver docker-container --bootstrap
+docker buildx use biodev-builder
+
+# Build and push
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  --tag schirmerlab/biodev:1.0 \
+  --push \
+  .
+```
+
+## 📦 Architecture-Specific Packages
+
+### What Changes Between Architectures?
+
+#### x86_64 (Full Suite)
+- Complete bioconda package collection
+- All nanopore tools (medaka, lrge, dnaapler)
+- Full prokka annotation suite
+- All R Bioconductor packages
+
+#### ARM64 (Compatible Subset)
+- Core bioinformatics tools (samtools, bcftools, bedtools)
+- Most alignment and analysis tools
+- Limited nanopore tool availability
+- Some packages installed via pip fallback
+
+### Bioinformatics Tools Included
+
+#### Available on Both Architectures
+- **Alignment**: minimap2, samtools, bcftools
+- **Analysis**: bedtools, seqkit
+- **Quality Control**: fastp, nanofilt, nanoplot
+- **Libraries**: biopython, bamtools, blast
+
+#### x86_64 Only (ARM64 may use alternatives)
+- **Advanced Assembly**: flye, medaka
+- **Specialized Tools**: lrge, dnaapler, prokka
+- **Nanopore Suite**: rasusa, porechop_abi, filtlong
+
+### Adding Dependencies
+
+#### System Packages (`packages.txt`)
+```bash
+# Add Ubuntu packages (architecture-agnostic)
 htop
 tree
 nano
 ```
 
-### Adding Python Packages
-
-Edit `docker/environment.yml`:
-
+#### Conda Packages (`environment.yml`)
 ```yaml
 dependencies:
   - python=3.10
   - numpy
   - your-new-package
-  - pip:
-    - another-pip-package
+
+  # Bioconda packages (check ARM64 availability)
+  - bioconda::your-bio-package
 ```
 
-#### Bioinformatics Tools Included
+#### Architecture-Specific Packages
+Modify `create_platform_env.sh` to handle architecture-specific packages:
 
-**Conda/Bioconda packages:**
-- Assembly: flye, polypolish
-- Alignment: minimap2, samtools, bcftools
-- Analysis: bedtools, seqkit, fastani
-- Annotation: prokka
-- Quality Control: fastp, nanofilt, nanoplot, rasusa
-- Libraries: biopython, bamtools
+```bash
+case "$ARCH" in
+    arm64|aarch64)
+        # ARM64-specific handling
+        echo "  - alternative-package-for-arm64" >> "$TARGET_ENV"
+        ;;
+    amd64|x86_64)
+        # Full x86_64 package set
+        echo "  - full-feature-package" >> "$TARGET_ENV"
+        ;;
+esac
+```
 
-**Pip packages:**
-- dnaapler, pod5, porechop_abi, trimnami, pypolca
+## 🐛 Troubleshooting
 
-### Adding R Packages
+### Common Architecture Issues
 
-Edit `docker/environment.yml` and add R packages using conda-forge or bioconda channels:
+#### ARM64 Package Unavailable
+```bash
+# Error: PackagesNotFoundError: The following packages are not available from current channels: package-name
+```
+**Solution**: The package isn't available for ARM64. Options:
+1. Find an alternative package
+2. Install via pip if available
+3. Use the x86_64 image with emulation (slower)
+
+#### Emulation Performance
+If you need x86_64-only packages on ARM64:
+```bash
+docker run --platform linux/amd64 schirmerlab/biodev:1.0
+```
+**Note**: This runs with emulation and will be significantly slower.
+
+#### Build Failures
+```bash
+# Check build logs
+docker buildx build --progress=plain --platform linux/arm64 .
+
+# Test specific architecture
+docker run --rm --platform linux/arm64 ubuntu:24.04 uname -m
+```
+
+### Development Workflow
+
+#### Testing Both Architectures Locally
+```bash
+# Build for specific platforms
+docker buildx build --platform linux/amd64 -t biodev:amd64 .
+docker buildx build --platform linux/arm64 -t biodev:arm64 .
+
+# Test each
+docker run --rm biodev:amd64 ./test_environment.sh
+docker run --rm biodev:arm64 ./test_environment.sh
+```
+
+#### DevContainer Configuration
+
+##### Use Multi-Arch Published Image
+```json
+{
+  "image": "schirmerlab/biodev:1.0",
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python", "ms-toolsai.jupyter"]
+    }
+  }
+}
+```
+
+##### Local Development Build
+```json
+{
+  "dockerFile": "../docker/Dockerfile",
+  "context": "../docker",
+  "build": {
+    "args": {
+      "BUILDKIT_INLINE_CACHE": "1"
+    }
+  }
+}
+```
+
+### Performance Tips
+
+1. **Use Native Architecture**: Always prefer native builds when possible
+2. **Layer Caching**: Use `BUILDKIT_INLINE_CACHE=1` for better build caching
+3. **Parallel Builds**: Use Docker Buildx for faster multi-platform builds
+4. **Registry Caching**: Push intermediate layers to speed up subsequent builds
+
+### Verification Commands
+
+```bash
+# Check image architecture
+docker inspect schirmerlab/biodev:1.0 | grep Architecture
+
+# Verify multi-platform manifest
+docker buildx imagetools inspect schirmerlab/biodev:1.0
+
+# Test environment in container
+docker run --rm schirmerlab/biodev:1.0 ./test_environment.sh
+```
+
+## 🔄 CI/CD Integration
+
+For automated multi-arch builds in GitHub Actions:
 
 ```yaml
-dependencies:
-  # R packages from conda-forge
-  - conda-forge::r-your-package
-  - conda-forge::r-another-package
-  
-  # R Bioconductor packages from bioconda
-  - bioconda::bioconductor-yourpackage
+- name: Set up Docker Buildx
+  uses: docker/setup-buildx-action@v2
+
+- name: Build and push multi-arch image
+  uses: docker/build-push-action@v4
+  with:
+    context: docker/
+    platforms: linux/amd64,linux/arm64
+    push: true
+    tags: schirmerlab/biodev:1.0
+    cache-from: type=gha
+    cache-to: type=gha,mode=max
 ```
-
-**Benefits of conda-managed R packages:**
-- Pre-compiled binaries (no compilation errors)
-- Automatic system dependency management
-- Consistent dependency resolution
-- Faster, more reliable installations
-
-## Switching Between Modes
-
-### To Published Image Mode
-1. Edit `.devcontainer/devcontainer.json`
-2. Uncomment the `"image"` line
-3. Comment out the `"dockerFile"` and `"context"` lines
-4. Rebuild container
-
-### To Local Build Mode
-1. Edit `.devcontainer/devcontainer.json`
-2. Comment out the `"image"` line
-3. Uncomment the `"dockerFile"` and `"context"` lines
-4. Rebuild container
-
-## Troubleshooting
-
-- If packages fail to install, check the syntax in the respective dependency files
-- For R package installation issues, check if system dependencies are available in `packages.txt`
-- Use `docker logs <container-id>` to debug build issues
