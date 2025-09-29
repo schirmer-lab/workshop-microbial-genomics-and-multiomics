@@ -31,12 +31,13 @@ dependencies:
   - bioconda::seqkit
   - bioconda::flye
   - bioconda::fastani
-  # - bioconda::prokka # This is not working (solving package never finishes)
+  - bioconda::prokka # This is not working (solving package never finishes)
   - bioconda::fastp
   - bioconda::bamtools
   - bioconda::blast
   - bioconda::mmseqs2
   - bioconda::bwa
+  - bioconda::checkm-genome
 
   # Illumina tools
   - bioconda::trim-galore
