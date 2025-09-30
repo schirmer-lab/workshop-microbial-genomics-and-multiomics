@@ -22,8 +22,8 @@
   // Handle cross-platform file permissions
   "remoteUser": "root",
 
-  // Comprehensive permission setup for seamless host-container file operations
-  "postCreateCommand": "bash -c 'mkdir -p /biodata && chmod 777 /biodata && echo \"# File permission settings for cross-platform compatibility\" >> /root/.bashrc && echo \"umask 0000\" >> /root/.bashrc && echo \"export JUPYTER_ALLOW_INSECURE_WRITES=1\" >> /root/.bashrc && find /biodata -type d -exec chmod 777 {} + 2>/dev/null || true && find /biodata -type f -exec chmod 666 {} + 2>/dev/null || true'",
+  // Comprehensive permission setup and biodata download for seamless host-container file operations
+  "postCreateCommand": "bash -c 'mkdir -p /biodata && chmod 777 /biodata && echo \"# File permission settings for cross-platform compatibility\" >> /root/.bashrc && echo \"umask 0000\" >> /root/.bashrc && echo \"export JUPYTER_ALLOW_INSECURE_WRITES=1\" >> /root/.bashrc && bash ${containerWorkspaceFolder}/docker/download_biodata.sh && find /biodata -type d -exec chmod 777 {} + 2>/dev/null || true && find /biodata -type f -exec chmod 666 {} + 2>/dev/null || true'",
 
   "customizations": {
     "vscode": {

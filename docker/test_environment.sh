@@ -4,6 +4,11 @@ set -e  # Exit on any error
 echo "🔍 Testing Dev Container Environment"
 echo "==================================="
 
+echo "0. Testing Unicode/Emoji Support..."
+echo "Locale: $(locale | grep LANG)"
+echo "Testing emojis: ✅ ❌ 📦 🧪 🎉"
+echo "Unicode test: $(echo -e '\U2705 \U274C \U1F4E6')"
+
 echo "1. Testing R installation..."
 R --version | head -1
 
