@@ -38,6 +38,14 @@ RUN set -eux; \
     fi; \
     rm -rf /tmp/packages.txt
 
+# Configure Unicode support (works on both ARM64 and AMD64)
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
+    locale-gen && \
+    fc-cache -fv
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+
 # Install micromamba with architecture detection
 RUN set -eux; \
     case "${TARGETARCH:-amd64}" in \
@@ -51,31 +59,17 @@ RUN set -eux; \
     tar -xvj -C /usr/local/bin -f /tmp/micromamba.tar.bz2 bin/micromamba --strip-components=1; \
     rm /tmp/micromamba.tar.bz2
 
-# Copy environment files and platform-specific script
-COPY environment.yml /tmp/environment.yml
-COPY create_platform_env.sh /tmp/create_platform_env.sh
+# Copy architecture-specific environment file
+COPY environment-${TARGETARCH:-amd64}.yml /tmp/environment.yml
 
-# Create platform-specific environment and install packages
-RUN chmod +x /tmp/create_platform_env.sh && \
-    /tmp/create_platform_env.sh && \
-    echo "Installing conda packages for ${TARGETARCH:-amd64}..." && \
-    ARCH=${TARGETARCH:-amd64} && \
-    ENV_FILE="/tmp/environment-${ARCH}.yml" && \
-    if [ -f "$ENV_FILE" ]; then \
-        echo "Using platform-specific environment: $ENV_FILE"; \
-        /usr/local/bin/micromamba install -y -f "$ENV_FILE" || { \
-            echo "Some packages failed to install, trying with --strict-channel-priority=false"; \
-            /usr/local/bin/micromamba install -y -f "$ENV_FILE" --strict-channel-priority=false; \
-        }; \
-    else \
-        echo "Using default environment: /tmp/environment.yml"; \
-        /usr/local/bin/micromamba install -y -f /tmp/environment.yml || { \
-            echo "Some packages failed to install, trying with relaxed priority"; \
-            /usr/local/bin/micromamba install -y -f /tmp/environment.yml --strict-channel-priority=false; \
-        }; \
-    fi && \
+# Install conda packages
+RUN echo "Installing conda packages for ${TARGETARCH:-amd64}..." && \
+    /usr/local/bin/micromamba install -y -f /tmp/environment.yml || { \
+        echo "Some packages failed to install, trying with --strict-channel-priority=false"; \
+        /usr/local/bin/micromamba install -y -f /tmp/environment.yml --strict-channel-priority=false; \
+    } && \
     /usr/local/bin/micromamba clean -a -y && \
-    rm -rf /tmp/environment*.yml /tmp/create_platform_env.sh
+    rm -rf /tmp/environment.yml
 
 # Install Jupyter kernels
 RUN /usr/local/bin/micromamba run python -m ipykernel install --sys-prefix && \

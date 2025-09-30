@@ -44,3 +44,10 @@ libncurses-dev
 autoconf
 pkg-config
 libhdf5-dev
+
+# Unicode and emoji support (cross-platform)
+locales
+fonts-noto-color-emoji
+fonts-liberation
+fonts-dejavu-core
+fontconfig
