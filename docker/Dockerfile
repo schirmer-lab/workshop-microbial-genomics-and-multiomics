@@ -81,4 +81,9 @@ RUN chmod +x /tmp/test_environment.sh && \
     /tmp/test_environment.sh && \
     rm /tmp/test_environment.sh
 
+RUN wget -O /tmp/mmseqs-linux-sse2.tar.gz https://mmseqs.com/latest/mmseqs-linux-sse2.tar.gz && \
+    ls -l /tmp && \
+    mkdir -p /usr/local/bin && \
+    tar -xvzf /tmp/mmseqs-linux-sse2.tar.gz -C /usr/local/bin
+
 WORKDIR /workspace

@@ -15,6 +15,9 @@ dependencies:
   - h5py
   - tqdm
 
+  # Package Management
+  - conda-forge::uv
+
   # Jupyter (from conda-forge)
   - conda-forge::biopython
   - conda-forge::jupyter
