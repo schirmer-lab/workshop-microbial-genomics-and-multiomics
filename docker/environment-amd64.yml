@@ -41,6 +41,8 @@ dependencies:
   - conda-forge::r-remotes
   - conda-forge::r-biocmanager
   - conda-forge::r-ggpubr
+  - conda-forge::r-reshape2
+  - conda-forge::r-ggplot2
 
   # Bioinformatics (full suite for x86_64 from bioconda)
   - bioconda::samtools

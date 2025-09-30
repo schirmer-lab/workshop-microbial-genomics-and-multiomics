@@ -27,6 +27,12 @@ dependencies:
   # Plotting
   - conda-forge::python-kaleido
 
+  # Specialized packages
+  - conda-forge::r-vegan
+#  - conda-forge::r-fossil
+#  - conda-forge::r-taxonomizr
+  - conda-forge::r-languageserver
+
   # R and R packages (from conda-forge) - let conda resolve versions
   - conda-forge::r-base=4.3.*
   - conda-forge::r-irkernel
@@ -35,10 +41,8 @@ dependencies:
   - conda-forge::r-remotes
   - conda-forge::r-biocmanager
   - conda-forge::r-ggpubr
-  - conda-forge::r-vegan
-  - conda-forge::r-languageserver
-#  - conda-forge::r-fossil
-#  - conda-forge::r-taxonomizr
+  - conda-forge::r-reshape2
+  - conda-forge::r-ggplot2
 
   # Bioinformatics (ARM64-compatible subset from bioconda)
   - bioconda::samtools
