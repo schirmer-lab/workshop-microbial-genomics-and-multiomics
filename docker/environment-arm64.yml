@@ -24,6 +24,9 @@ dependencies:
   - conda-forge::nbconvert
   - conda-forge::ipywidgets
 
+  # Plotting
+  - conda-forge::python-kaleido
+
   # R and R packages (from conda-forge) - let conda resolve versions
   - conda-forge::r-base=4.3.*
   - conda-forge::r-irkernel
