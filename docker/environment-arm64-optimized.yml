@@ -61,6 +61,7 @@ dependencies:
   # Removed blast (keeping mmseqs2 as primary search tool - installed via binary)
   # mmseqs2 now installed as binary to save space
   - bioconda::bwa
+  - bioconda::blast
   - bioconda::megahit
   # Removed spades (keeping megahit as primary assembler)
 

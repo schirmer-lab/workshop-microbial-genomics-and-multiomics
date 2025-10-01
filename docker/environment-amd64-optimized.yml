@@ -59,6 +59,7 @@ dependencies:
   - bioconda::bamtools
   # Removed blast (keeping mmseqs2 as primary search tool - installed via binary)
   # mmseqs2 now installed as binary to save space
+  - bioconda::blast
   - bioconda::bwa
   - bioconda::checkm-genome
   - bioconda::megahit
