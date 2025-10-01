@@ -94,10 +94,10 @@ RUN echo "Installing conda packages for ${TARGETARCH:-amd64}..." && \
     rm -rf /tmp/environment.yml /root/.cache
 
 # Download and install mmseqs2 (more efficient than conda package)
-RUN wget -O /tmp/mmseqs-linux-sse2.tar.gz https://mmseqs.com/latest/mmseqs-linux-sse2.tar.gz && \
-    mkdir -p /opt/mmseqs && \
-    tar -xvzf /tmp/mmseqs-linux-sse2.tar.gz -C /opt/mmseqs --strip-components=1 && \
-    rm /tmp/mmseqs-linux-sse2.tar.gz
+#RUN wget -O /tmp/mmseqs-linux-sse2.tar.gz https://mmseqs.com/latest/mmseqs-linux-sse2.tar.gz && \
+#    mkdir -p /opt/mmseqs && \
+#    tar -xvzf /tmp/mmseqs-linux-sse2.tar.gz -C /opt/mmseqs --strip-components=1 && \
+#    rm /tmp/mmseqs-linux-sse2.tar.gz
 
 # Copy and run comprehensive environment test (build-time validation)
 COPY test_environment.sh /tmp/test_environment.sh
