@@ -9,11 +9,11 @@ dependencies:
   - numpy
   - pandas
   - matplotlib
-  - seaborn
-  - scipy
-  - scikit-learn
-  - h5py
-  - tqdm
+#  - seaborn
+#  - scipy
+#  - scikit-learn
+#  - h5py
+#  - tqdm
 
   # Package Management
   - conda-forge::uv
@@ -56,23 +56,23 @@ dependencies:
   # - bioconda::fastani
   # Removed prokka (problematic package that causes long solve times)
   - bioconda::fastp
-  - bioconda::bamtools
+  #- bioconda::bamtools
   # Removed blast (keeping mmseqs2 as primary search tool - installed via binary)
   # mmseqs2 now installed as binary to save space
   - bioconda::blast
   - bioconda::bwa
-  - bioconda::checkm-genome
+  #- bioconda::checkm-genome
   - bioconda::megahit
   # Removed spades (keeping megahit as primary assembler)
 
   # Illumina tools (essential only)
   - bioconda::trim-galore
-  - bioconda::multiqc
+  #- bioconda::multiqc
 
   # Nanopore tools (essential subset)
   # - bioconda::nanofilt
   - bioconda::nanoplot
-  - bioconda::rasusa
+#  - bioconda::rasusa
   # - bioconda::porechop_abi
   - bioconda::filtlong
   - bioconda::medaka

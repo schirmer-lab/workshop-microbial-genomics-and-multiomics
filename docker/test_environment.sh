@@ -116,9 +116,6 @@ packages = {
     'numpy': 'numpy',
     'pandas': 'pandas',
     'matplotlib': 'matplotlib',
-    'seaborn': 'seaborn',
-    'scipy': 'scipy',
-    'sklearn': 'sklearn',
     'biopython': 'Bio'  # biopython package imports as Bio
 }
 failed = []
