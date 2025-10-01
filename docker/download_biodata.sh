@@ -123,4 +123,5 @@ main() {
 
 # Run main function
 # main "$@"
+mkdir -p $BIODATA_DIR
 echo "Skipping download for now..."

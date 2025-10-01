@@ -65,6 +65,7 @@ dependencies:
   - bioconda::blast
   - bioconda::mmseqs2
   - bioconda::bwa
+  - bioconda::megahit
 
   # Illumina tools
   - bioconda::trim-galore
