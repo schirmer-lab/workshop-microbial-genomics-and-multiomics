@@ -29,7 +29,7 @@ dependencies:
   - conda-forge::ipython
 
   # Plotting (essential only)
-  - conda-forge::python-kaleido
+  #- conda-forge::python-kaleido
 
   # R and essential R packages (from conda-forge)
   - conda-forge::r-base=4.3.*
@@ -52,6 +52,7 @@ dependencies:
   - bioconda::bowtie2
   - bioconda::metaphlan==3.0.1
   - bioconda::bcftools
+  - bioconda::mmseqs2
   # - bioconda::bedtools
   - bioconda::minimap2
   - bioconda::seqkit
@@ -60,17 +61,16 @@ dependencies:
   # Removed prokka (problematic package that causes long solve times)
   - bioconda::fastp
   #- bioconda::bamtools
-  # Removed blast (keeping mmseqs2 as primary search tool - installed via binary)
-  # mmseqs2 now installed as binary to save space
   - bioconda::blast
   - bioconda::bwa
   #- bioconda::checkm-genome
   - bioconda::megahit
-  # Removed spades (keeping megahit as primary assembler)
+  - bioconda::foldseek
 
   # Illumina tools (essential only)
   - bioconda::trim-galore
   #- bioconda::multiqc
+  - bioconda::spades
 
   # Nanopore tools (essential subset)
   # - bioconda::nanofilt
