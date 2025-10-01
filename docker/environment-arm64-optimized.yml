@@ -1,0 +1,85 @@
+channels:
+  - conda-forge
+  - bioconda
+
+dependencies:
+  # Core scientific computing (from conda-forge)
+  - python=3.10
+  - pip
+  - numpy
+  - pandas
+  - matplotlib
+  - seaborn
+  - scipy
+  - scikit-learn
+  - h5py
+  - tqdm
+
+  # Package Management
+  - conda-forge::uv
+
+  # Jupyter (from conda-forge)
+  - conda-forge::biopython
+  - conda-forge::jupyter
+  - conda-forge::jupyterlab
+  - conda-forge::notebook
+  - conda-forge::ipykernel
+  - conda-forge::nbconvert
+  - conda-forge::ipywidgets
+
+  # Plotting (essential only)
+  - conda-forge::python-kaleido
+
+  # R and essential R packages (from conda-forge)
+  - conda-forge::r-base=4.3.*
+  - conda-forge::r-irkernel
+  - conda-forge::r-tidyverse
+  - conda-forge::r-ggpubr
+  - conda-forge::r-reshape2
+  - conda-forge::r-ggplot2
+  - conda-forge::r-vegan
+  # Architecture-specific packages commented out for ARM64
+  # - conda-forge::r-fossil
+  # - conda-forge::r-taxonomizr
+  - conda-forge::r-languageserver
+
+  # Essential bioinformatics tools (ARM64-compatible subset)
+  - bioconda::samtools
+  - bioconda::prodigal
+  - bioconda::cd-hit
+  - bioconda::bowtie2
+  - bioconda::metaphlan==3.0.1
+  - bioconda::bcftools
+  # - bioconda::bedtools
+  - bioconda::minimap2
+  - bioconda::seqkit
+  - bioconda::flye
+  # - bioconda::fastani
+  # Removed prokka (problematic package)
+  - bioconda::fastp
+  # - bioconda::bamtools
+  # Removed blast (keeping mmseqs2 as primary search tool - installed via binary)
+  # mmseqs2 now installed as binary to save space
+  - bioconda::bwa
+  - bioconda::megahit
+  # Removed spades (keeping megahit as primary assembler)
+
+  # Illumina tools (essential only)
+  - bioconda::trim-galore
+  - bioconda::multiqc
+
+  # Nanopore tools (essential subset)
+  # - bioconda::nanofilt
+  - bioconda::nanoplot
+  - bioconda::rasusa
+  # - bioconda::porechop_abi
+  - bioconda::filtlong
+  - bioconda::medaka
+  # Removed less commonly used: lrge, dnaapler, polypolish
+
+  # R Bioconductor packages (essential only)
+  - bioconda::bioconductor-maaslin2
+
+  # pip managed dependencies (for packages not available via conda on ARM64)
+  - pip:
+    - checkm-genome
