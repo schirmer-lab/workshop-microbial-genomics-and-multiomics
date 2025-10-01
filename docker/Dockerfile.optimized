@@ -120,7 +120,7 @@ ARG BUILDPLATFORM
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
 ENV MAMBA_ROOT_PREFIX=/opt/conda
-ENV PATH=/opt/conda/bin:/opt/mmseqs/bin:$PATH
+#ENV PATH=/opt/conda/bin:/opt/mmseqs/bin:$PATH
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
@@ -151,7 +151,7 @@ COPY --from=builder /opt/conda /opt/conda
 COPY --from=builder /usr/local/bin/micromamba /usr/local/bin/micromamba
 
 # Copy mmseqs2 installation
-COPY --from=builder /opt/mmseqs /opt/mmseqs
+#COPY --from=builder /opt/mmseqs /opt/mmseqs
 
 # Create workspace directory
 WORKDIR /workspace
