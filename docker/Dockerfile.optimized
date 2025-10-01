@@ -78,7 +78,7 @@ RUN echo "Installing conda packages for ${TARGETARCH:-amd64}..." && \
         /usr/local/bin/micromamba install -y -f /tmp/environment.yml --strict-channel-priority=false; \
     } && \
     echo "Installing Jupyter kernels..." && \
-    /usr/local/bin/micromamba run python -m ipykernel install --sys-prefix && \
+    /usr/local/bin/micromamba run python -m ipykernel install --sys-prefix --name python3 --display-name "Python 3.10" && \
     /usr/local/bin/micromamba run R -e "IRkernel::installspec(user = FALSE)" && \
     echo "Cleaning up conda environment..." && \
     /usr/local/bin/micromamba clean -a -y && \
