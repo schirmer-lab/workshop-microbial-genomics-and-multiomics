@@ -39,7 +39,9 @@ dependencies:
   - conda-forge::r-ggplot2
   - conda-forge::r-vegan
   # Removed development packages: r-devtools, r-remotes
-  # Removed architecture-specific packages: r-fossil, r-taxonomizr
+  - conda-forge::r-fossil
+  - conda-forge::r-taxonomizr
+  - conda-forge::r-biocmanager
   - conda-forge::r-languageserver
 
   # Essential bioinformatics tools (keep most used, remove duplicates)
