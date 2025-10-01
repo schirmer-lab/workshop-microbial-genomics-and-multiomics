@@ -26,6 +26,7 @@ dependencies:
   - conda-forge::ipykernel
   - conda-forge::nbconvert
   - conda-forge::ipywidgets
+  - conda-forge::ipython
 
   # Plotting (essential only)
   - conda-forge::python-kaleido
