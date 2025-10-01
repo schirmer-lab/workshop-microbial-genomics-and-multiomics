@@ -9,11 +9,11 @@ dependencies:
   - numpy
   - pandas
   - matplotlib
-  - seaborn
-  - scipy
-  - scikit-learn
-  - h5py
-  - tqdm
+  #- seaborn
+  #- scipy
+  #- scikit-learn
+  #- h5py
+  #- tqdm
 
   # Package Management
   - conda-forge::uv
@@ -26,6 +26,7 @@ dependencies:
   - conda-forge::ipykernel
   - conda-forge::nbconvert
   - conda-forge::ipywidgets
+  - conda-forge::ipython
 
   # Plotting
   - conda-forge::python-kaleido
@@ -53,31 +54,32 @@ dependencies:
   - bioconda::cd-hit
   - bioconda::bowtie2
   - bioconda::metaphlan==3.0.1
-  - bioconda::bcftools
-  - bioconda::bedtools
+  #- bioconda::bcftools
+  #- bioconda::bedtools
   - bioconda::minimap2
-  - bioconda::seqkit
+  #- bioconda::seqkit
   - bioconda::flye
-  - bioconda::fastani
+  #- bioconda::fastani
   - bioconda::prokka # This is not working (solving package never finishes)
   - bioconda::fastp
-  - bioconda::bamtools
+  #- bioconda::bamtools
   - bioconda::blast
   - bioconda::mmseqs2
   - bioconda::bwa
-  - bioconda::checkm-genome
+  #- bioconda::checkm-genome
   - bioconda::megahit
+  - bioconda::foldseek
 
   # Illumina tools
   - bioconda::trim-galore
   - bioconda::spades
-  - bioconda::multiqc
+  #- bioconda::multiqc
 
   # Nanopore tools (explicitly from bioconda)
-  - bioconda::nanofilt
+  #- bioconda::nanofilt
   - bioconda::nanoplot
-  - bioconda::rasusa
-  - bioconda::porechop_abi
+  #- bioconda::rasusa
+  #- bioconda::porechop_abi
   - bioconda::filtlong
   - bioconda::lrge
   - bioconda::dnaapler

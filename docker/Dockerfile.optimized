@@ -90,7 +90,7 @@ RUN echo "Installing conda packages for ${TARGETARCH:-amd64}..." && \
     # Remove documentation and man pages \
     rm -rf /opt/conda/share/doc /opt/conda/share/man && \
     # Remove test directories (but preserve IPython.testing and other essential test modules) \
-    find /opt/conda -path "*/site-packages/*/test*" -type d ! -path "*/IPython/*" ! -path "*/jupyter*" ! -path "*/ipykernel*" -exec rm -rf {} + 2>/dev/null || true && \
+    #find /opt/conda -path "*/site-packages/*/test*" -type d ! -path "*/IPython/*" ! -path "*/jupyter*" ! -path "*/ipykernel*" -exec rm -rf {} + 2>/dev/null || true && \
     rm -rf /tmp/environment.yml /root/.cache
 
 # Download and install mmseqs2 (more efficient than conda package)
@@ -120,7 +120,7 @@ ARG BUILDPLATFORM
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
 ENV MAMBA_ROOT_PREFIX=/opt/conda
-#ENV PATH=/opt/conda/bin:/opt/mmseqs/bin:$PATH
+ENV PATH=/opt/conda/bin:$PATH
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8

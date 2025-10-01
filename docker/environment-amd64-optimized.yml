@@ -23,7 +23,6 @@ dependencies:
   - conda-forge::jupyter
   - conda-forge::jupyterlab
   - conda-forge::notebook
-  - conda-forge::ipython
   - conda-forge::ipykernel
   - conda-forge::nbconvert
   - conda-forge::ipywidgets
