@@ -89,8 +89,8 @@ RUN echo "Installing conda packages for ${TARGETARCH:-amd64}..." && \
     find /opt/conda -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true && \
     # Remove documentation and man pages \
     rm -rf /opt/conda/share/doc /opt/conda/share/man && \
-    # Remove test directories (but keep essential ones) \
-    find /opt/conda -path "*/site-packages/*/test*" -type d -exec rm -rf {} + 2>/dev/null || true && \
+    # Remove test directories (but preserve IPython.testing and other essential test modules) \
+    find /opt/conda -path "*/site-packages/*/test*" -type d ! -path "*/IPython/*" ! -path "*/jupyter*" ! -path "*/ipykernel*" -exec rm -rf {} + 2>/dev/null || true && \
     rm -rf /tmp/environment.yml /root/.cache
 
 # Download and install mmseqs2 (more efficient than conda package)
