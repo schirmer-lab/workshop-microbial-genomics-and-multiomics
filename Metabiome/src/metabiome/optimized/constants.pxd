@@ -1,0 +1,1 @@
+cdef char[12][64] GENETIC_CODE
