@@ -9,11 +9,6 @@ dependencies:
   - numpy
   - pandas
   - matplotlib
-  - seaborn
-  - scipy
-  - scikit-learn
-  - h5py
-  - tqdm
 
   # Package Management
   - conda-forge::uv
@@ -26,63 +21,53 @@ dependencies:
   - conda-forge::ipykernel
   - conda-forge::nbconvert
   - conda-forge::ipywidgets
+  - conda-forge::ipython
 
   # Plotting
   - conda-forge::python-kaleido
 
-  # Specialized packages
-  - conda-forge::r-vegan
-  - conda-forge::r-fossil
-  - conda-forge::r-taxonomizr
-  - conda-forge::r-languageserver
-
-  # R and R packages (from conda-forge) - let conda resolve versions
+  # R and essential R packages (from conda-forge)
   - conda-forge::r-base=4.3.*
   - conda-forge::r-irkernel
   - conda-forge::r-tidyverse
-  - conda-forge::r-devtools
-  - conda-forge::r-remotes
-  - conda-forge::r-biocmanager
   - conda-forge::r-ggpubr
   - conda-forge::r-reshape2
   - conda-forge::r-ggplot2
+  - conda-forge::r-vegan
+  - conda-forge::r-biocmanager
+  # Architecture-specific packages commented out for ARM64
+  # - conda-forge::r-fossil
+  # - conda-forge::r-taxonomizr
+  - conda-forge::r-languageserver
 
-  # Bioinformatics (full suite for x86_64 from bioconda)
+  # Essential bioinformatics tools
   - bioconda::samtools
   - bioconda::prodigal
   - bioconda::cd-hit
   - bioconda::bowtie2
   - bioconda::metaphlan==3.0.1
   - bioconda::bcftools
-  - bioconda::bedtools
+  - bioconda::mmseqs2
   - bioconda::minimap2
   - bioconda::seqkit
   - bioconda::flye
-  - bioconda::fastani
-  - bioconda::prokka # This is not working (solving package never finishes)
   - bioconda::fastp
-  - bioconda::bamtools
-  - bioconda::blast
-  - bioconda::mmseqs2
   - bioconda::bwa
-  - bioconda::checkm-genome
+  - bioconda::blast
   - bioconda::megahit
+  - bioconda::foldseek
 
   # Illumina tools
   - bioconda::trim-galore
   - bioconda::spades
-  - bioconda::multiqc
 
-  # Nanopore tools (explicitly from bioconda)
-  - bioconda::nanofilt
+  # Nanopore tools
   - bioconda::nanoplot
-  - bioconda::rasusa
-  - bioconda::porechop_abi
   - bioconda::filtlong
+  - bioconda::medaka
   - bioconda::lrge
   - bioconda::dnaapler
-  - bioconda::medaka
   - bioconda::polypolish
 
-  # R Bioconductor packages (from bioconda)
+  # R Bioconductor packages
   - bioconda::bioconductor-maaslin2

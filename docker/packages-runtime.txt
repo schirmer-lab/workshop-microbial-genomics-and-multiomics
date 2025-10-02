@@ -1,0 +1,42 @@
+# Runtime system packages (minimal set needed for running applications)
+# These are the only packages included in the final runtime image
+
+# Essential runtime packages
+ca-certificates
+curl
+wget
+
+# R runtime (without dev packages)
+r-base
+
+# Required runtime libraries (without dev headers)
+libcurl4
+libssl3
+libxml2
+libfontconfig1
+libharfbuzz0b
+libfribidi0
+libfreetype6
+libpng16-16
+libtiff6
+libjpeg-turbo8
+
+# Minimal additional runtime libraries
+libgit2-1.7
+libssh2-1
+libsasl2-2
+libmagick++-6.q16-9
+
+# Essential runtime system libraries
+zlib1g
+libbz2-1.0
+liblzma5
+libncurses6
+libhdf5-103-1
+
+# Unicode and font support (minimal)
+locales
+fonts-noto-color-emoji
+
+# Essential utilities (consider removing if not needed)
+imagemagick
