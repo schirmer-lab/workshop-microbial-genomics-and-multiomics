@@ -23,7 +23,7 @@ dependencies:
   - conda-forge::ipywidgets
   - conda-forge::ipython
 
-  # Plotting (essential only)
+  # Plotting
   - conda-forge::python-kaleido
 
   # R and essential R packages (from conda-forge)
@@ -40,7 +40,7 @@ dependencies:
   # - conda-forge::r-taxonomizr
   - conda-forge::r-languageserver
 
-  # Essential bioinformatics tools (ARM64-compatible subset)
+  # Essential bioinformatics tools
   - bioconda::samtools
   - bioconda::prodigal
   - bioconda::cd-hit
@@ -57,11 +57,11 @@ dependencies:
   - bioconda::megahit
   - bioconda::foldseek
 
-  # Illumina tools (essential only)
+  # Illumina tools
   - bioconda::trim-galore
   - bioconda::spades
 
-  # Nanopore tools (essential subset)
+  # Nanopore tools
   - bioconda::nanoplot
   - bioconda::filtlong
   - bioconda::medaka
@@ -69,5 +69,5 @@ dependencies:
   - bioconda::dnaapler
   - bioconda::polypolish
 
-  # R Bioconductor packages (essential only)
+  # R Bioconductor packages
   - bioconda::bioconductor-maaslin2
