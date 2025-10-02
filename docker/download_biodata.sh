@@ -6,7 +6,7 @@
 set -e  # Exit on any error
 
 # Google Drive folder URL
-DRIVE_URL="https://drive.google.com/file/d/1VybEjswepPa4CV5FvUB_hjexHLRKW-2W/view?usp=drive_link"
+DRIVE_URL="https://drive.google.com/file/d/16EKKnivbd3Pc2af8vmqO7Rl7vyq-TubV/view?usp=drive_link"
 DRIVE_ID="1VybEjswepPa4CV5FvUB_hjexHLRKW-2W"
 BIODATA_DIR="/biodata"
 RESOURCES_DIR="/biodata/resources"
@@ -63,7 +63,7 @@ main() {
     mkdir -p "$BIODATA_DIR"
     
     # Check if biodata directory is empty
-    if [ ! -d "$RESOURCES_DIR" ]; then
+    if [ -d "$RESOURCES_DIR" ]; then
         log "Directory $RESOURCES_DIR exists. Skipping download."
         log "If you want to re-download, please delete the directory first."
         exit 0
