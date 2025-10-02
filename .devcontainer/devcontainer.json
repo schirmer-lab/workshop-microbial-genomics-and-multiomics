@@ -5,7 +5,7 @@
   "image": "schirmerlab/biodev:1.1.2",
 
   // Option 2: Build locally (uncomment the lines below and comment out the "image" line above)
-  // "dockerFile": "../docker/Dockerfile",
+  // "dockerFile": "../docker/Dockerfile.optimized",
   // "context": "../docker",
 
   // Provide a command to keep container running
