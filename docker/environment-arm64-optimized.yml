@@ -9,11 +9,6 @@ dependencies:
   - numpy
   - pandas
   - matplotlib
-#  - seaborn
-#  - scipy
-#  - scikit-learn
-#  - h5py
-#  - tqdm
 
   # Package Management
   - conda-forge::uv
@@ -23,13 +18,13 @@ dependencies:
   - conda-forge::jupyter
   - conda-forge::jupyterlab
   - conda-forge::notebook
-  - conda-forge::ipython
   - conda-forge::ipykernel
   - conda-forge::nbconvert
   - conda-forge::ipywidgets
+  - conda-forge::ipython
 
   # Plotting (essential only)
-  #- conda-forge::python-kaleido
+  - conda-forge::python-kaleido
 
   # R and essential R packages (from conda-forge)
   - conda-forge::r-base=4.3.*
@@ -53,14 +48,10 @@ dependencies:
   - bioconda::metaphlan==3.0.1
   - bioconda::bcftools
   - bioconda::mmseqs2
-  # - bioconda::bedtools
   - bioconda::minimap2
   - bioconda::seqkit
   - bioconda::flye
-  # - bioconda::fastani
-  # Removed prokka (problematic package)
   - bioconda::fastp
-  # - bioconda::bamtools
   - bioconda::bwa
   - bioconda::blast
   - bioconda::megahit
@@ -68,21 +59,15 @@ dependencies:
 
   # Illumina tools (essential only)
   - bioconda::trim-galore
-#  - bioconda::multiqc
   - bioconda::spades
 
   # Nanopore tools (essential subset)
-  # - bioconda::nanofilt
   - bioconda::nanoplot
-#  - bioconda::rasusa
-  # - bioconda::porechop_abi
   - bioconda::filtlong
   - bioconda::medaka
-  # Removed less commonly used: lrge, dnaapler, polypolish
+  - bioconda::lrge
+  - bioconda::dnaapler
+  - bioconda::polypolish
 
   # R Bioconductor packages (essential only)
   - bioconda::bioconductor-maaslin2
-
-  # pip managed dependencies (for packages not available via conda on ARM64)
-#  - pip:
-#    - checkm-genome

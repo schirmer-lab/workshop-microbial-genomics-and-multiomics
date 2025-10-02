@@ -26,6 +26,7 @@ echo ""
 
 # Parse command line arguments
 MULTI_ARCH=false
+PUSH=false
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -37,18 +38,23 @@ while [[ $# -gt 0 ]]; do
             IMAGE_TAG="$2"
             shift 2
             ;;
+        --push|-p)
+            PUSH=true
+            shift
+            ;;
         --help|-h)
             echo "Usage: $0 [OPTIONS]"
             echo "Options:"
             echo "  --multi-arch, -m    Build for multiple architectures (linux/amd64,linux/arm64)"
             echo "  --tag, -t TAG       Set image tag (default: YY.MM.DD format, today: $DEFAULT_TAG)"
+            echo "  --push, -p          Push image to Docker Hub (mulit arch only)
             echo "  --help, -h          Show this help message"
             echo ""
             echo "Examples:"
-            echo "  $0                           # Single arch build with date tag"
+            echo "  $0                          # Single arch build with date tag"
             echo "  $0 --tag 1.2.0              # Single arch build with custom tag"
-            echo "  $0 --multi-arch              # Multi arch build with date tag"
-            echo "  $0 -m -t latest              # Multi arch build with custom tag"
+            echo "  $0 --multi-arch             # Multi arch build with date tag"
+            echo "  $0 -m -p -t latest          # Create and push multi arch builf with custom tag"
             exit 0
             ;;
         *)
@@ -79,17 +85,28 @@ if [ "$MULTI_ARCH" = true ]; then
     # Create buildx builder if it doesn't exist
     docker buildx create --name biodev-builder --use 2>/dev/null || docker buildx use biodev-builder 2>/dev/null || true
 
-    # Build and push multi-arch image
-    docker buildx build \
-        --platform linux/amd64,linux/arm64 \
-        --tag "$FULL_IMAGE" \
-        --file docker/Dockerfile.optimized \
-        --push \
-        docker/
+    if [ "$PUSH" = true ]; then
+        # Build and push multi-arch image
+        docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            --tag "$FULL_IMAGE" \
+            --file docker/Dockerfile.optimized \
+            --push \
+            docker/
+    else
+        # Build multi-arch image, not pushing
+        docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            --tag "$FULL_IMAGE" \
+            --file docker/Dockerfile.optimized \
+            docker/
+    fi
 
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}✅ Multi-arch build completed successfully!${NC}"
-        echo -e "${GREEN}📊 Image pushed to registry with both amd64 and arm64 support${NC}"
+        if [ "$PUSH" = true ]; then
+            echo -e "${GREEN}📊 Image pushed to registry with both amd64 and arm64 support${NC}"
+        fi
     else
         echo -e "${RED}❌ Multi-arch build failed!${NC}"
         exit 1

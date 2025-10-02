@@ -89,15 +89,8 @@ RUN echo "Installing conda packages for ${TARGETARCH:-amd64}..." && \
     find /opt/conda -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true && \
     # Remove documentation and man pages \
     rm -rf /opt/conda/share/doc /opt/conda/share/man && \
-    # Remove test directories (but preserve IPython.testing and other essential test modules) \
-    #find /opt/conda -path "*/site-packages/*/test*" -type d ! -path "*/IPython/*" ! -path "*/jupyter*" ! -path "*/ipykernel*" -exec rm -rf {} + 2>/dev/null || true && \
+    # Remove temporary files and cache
     rm -rf /tmp/environment.yml /root/.cache
-
-# Download and install mmseqs2 (more efficient than conda package)
-#RUN wget -O /tmp/mmseqs-linux-sse2.tar.gz https://mmseqs.com/latest/mmseqs-linux-sse2.tar.gz && \
-#    mkdir -p /opt/mmseqs && \
-#    tar -xvzf /tmp/mmseqs-linux-sse2.tar.gz -C /opt/mmseqs --strip-components=1 && \
-#    rm /tmp/mmseqs-linux-sse2.tar.gz
 
 # Copy and run comprehensive environment test (build-time validation)
 COPY test_environment.sh /tmp/test_environment.sh
@@ -149,9 +142,6 @@ COPY --from=builder /opt/conda /opt/conda
 
 # Copy micromamba binary
 COPY --from=builder /usr/local/bin/micromamba /usr/local/bin/micromamba
-
-# Copy mmseqs2 installation
-#COPY --from=builder /opt/mmseqs /opt/mmseqs
 
 # Create workspace directory
 WORKDIR /workspace
