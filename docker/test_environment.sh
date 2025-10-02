@@ -116,9 +116,6 @@ packages = {
     'numpy': 'numpy',
     'pandas': 'pandas',
     'matplotlib': 'matplotlib',
-    'seaborn': 'seaborn',
-    'scipy': 'scipy',
-    'sklearn': 'sklearn',
     'biopython': 'Bio'  # biopython package imports as Bio
 }
 failed = []
@@ -138,7 +135,19 @@ else:
 "
 
 echo -e "\n7. Testing bioinformatics tools..."
-tools=("samtools" "bcftools" "minimap2" "fastp" "seqkit")
+tools=("samtools" "bcftools" "minimap2" "fastp" "seqkit" "mmseqs")
+for tool in "${tools[@]}"; do
+    if command -v "$tool" &> /dev/null; then
+        version=$(${tool} --version 2>&1 | head -1 || echo "version info unavailable")
+        echo "  ✅ $tool: $version"
+    else
+        echo "  ❌ $tool: not found"
+        exit 1
+    fi
+done
+
+echo -e "\n7. Testing Nanopore related tools..."
+tools=("flye" "medaka" "NanoPlot" "filtlong" "lrge" "dnaapler" "polypolish")
 for tool in "${tools[@]}"; do
     if command -v "$tool" &> /dev/null; then
         version=$(${tool} --version 2>&1 | head -1 || echo "version info unavailable")
