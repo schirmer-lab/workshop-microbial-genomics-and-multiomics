@@ -6,8 +6,7 @@
 set -e  # Exit on any error
 
 # Google Drive folder URL
-DRIVE_URL="https://drive.google.com/file/d/16EKKnivbd3Pc2af8vmqO7Rl7vyq-TubV/view?usp=drive_link"
-DRIVE_ID="1VybEjswepPa4CV5FvUB_hjexHLRKW-2W"
+DRIVE_URL="https://drive.google.com/file/d/1d4TgvuMY6xW0KNG9POelbt1Hkfj076qM/view?usp=drive_link"
 BIODATA_DIR="/biodata"
 RESOURCES_DIR="/biodata/resources"
 
@@ -69,7 +68,7 @@ main() {
         exit 0
     fi
     
-    log "Directory $RESOURCES_DIR is empty. Proceeding with download..."
+    log "Directory $RESOURCES_DIR does not exist. Proceeding with download..."
     
     # Check if gdown is available, install if not
     if ! command -v gdown >/dev/null 2>&1; then
@@ -79,18 +78,19 @@ main() {
     
     # Extract folder ID from URL
     DRIVE_ID=$(extract_drive_id "$DRIVE_URL")
-    log "Extracted folder ID: $DRIVE_ID"
+    log "Extracted google drive ID: $DRIVE_ID"
     
     # Change to biodata directory
     cd "$BIODATA_DIR"
     
-    # Download the folder contents as a zip file (much faster than individual files)
-    log "Downloading Google Drive folder as zip archive to $BIODATA_DIR..."
-    log "This may take a while depending on the folder size..."
+    ## Download the folder contents as a zip file (much faster than individual files)
+    #log "Downloading Google Drive folder as zip archive to $BIODATA_DIR..."
+    #log "This may take a while depending on the folder size..."
+    log "Downloading resources folder as pre-zipped archive from Google Drive to $BIODATA_DIR..."
     
     # Create a temporary directory for the zip file
     TEMP_DIR=$(mktemp -d)
-    ZIP_FILE="$TEMP_DIR/biodata.zip"
+    ZIP_FILE="$TEMP_DIR/resources.zip"
     
     # Download the entire folder as a zip file
     #if gdown --folder "https://drive.google.com/drive/folders/$DRIVE_ID" --output "$ZIP_FILE" --quiet; then
