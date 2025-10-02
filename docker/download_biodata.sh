@@ -6,8 +6,10 @@
 set -e  # Exit on any error
 
 # Google Drive folder URL
-DRIVE_URL="https://drive.google.com/drive/folders/15ju2h7LbzCKQH5iCEPb2tmAHwosCdc8U?usp=sharing"
+DRIVE_URL="https://drive.google.com/file/d/1VybEjswepPa4CV5FvUB_hjexHLRKW-2W/view?usp=drive_link"
+DRIVE_ID="1VybEjswepPa4CV5FvUB_hjexHLRKW-2W"
 BIODATA_DIR="/biodata"
+RESOURCES_DIR="/biodata/resources"
 
 # Function to log messages with timestamp
 log() {
@@ -32,16 +34,25 @@ install_gdown() {
     fi
 }
 
-# Function to extract folder ID from Google Drive URL
-extract_folder_id() {
+# Function to extract ID from Google Drive URL
+extract_drive_id() {
     local url="$1"
-    # Extract folder ID from various Google Drive URL formats
-    if [[ $url =~ folders/([a-zA-Z0-9_-]+) ]]; then
-        echo "${BASH_REMATCH[1]}"
+    local id=""
+
+    # Try matching /d/<ID>
+    if [[ "$url" =~ /d/([^/]+) ]]; then
+        id="${BASH_REMATCH[1]}"
+
+    # Try matching id=<ID> (e.g. for share links)
+    elif [[ "$url" =~ id=([^&]+) ]]; then
+        id="${BASH_REMATCH[1]}"
+
     else
-        log "ERROR: Could not extract folder ID from URL: $url"
-        exit 1
+        echo "ERROR: Unable to extract ID from URL: $url" >&2
+        return 1
     fi
+
+    echo "$id"
 }
 
 # Main execution
@@ -52,22 +63,23 @@ main() {
     mkdir -p "$BIODATA_DIR"
     
     # Check if biodata directory is empty
-    if ! is_directory_empty "$BIODATA_DIR"; then
-        log "Directory $BIODATA_DIR is not empty. Skipping download."
-        log "If you want to re-download, please empty the directory first."
+    if [ ! -d "$RESOURCES_DIR" ]; then
+        log "Directory $RESOURCES_DIR exists. Skipping download."
+        log "If you want to re-download, please delete the directory first."
         exit 0
     fi
     
-    log "Directory $BIODATA_DIR is empty. Proceeding with download..."
+    log "Directory $RESOURCES_DIR is empty. Proceeding with download..."
     
     # Check if gdown is available, install if not
     if ! command -v gdown >/dev/null 2>&1; then
+        log "gdown not found, attempting installation..."
         install_gdown
     fi
     
     # Extract folder ID from URL
-    FOLDER_ID=$(extract_folder_id "$DRIVE_URL")
-    log "Extracted folder ID: $FOLDER_ID"
+    DRIVE_ID=$(extract_drive_id "$DRIVE_URL")
+    log "Extracted folder ID: $DRIVE_ID"
     
     # Change to biodata directory
     cd "$BIODATA_DIR"
@@ -81,7 +93,9 @@ main() {
     ZIP_FILE="$TEMP_DIR/biodata.zip"
     
     # Download the entire folder as a zip file
-    if gdown --folder "https://drive.google.com/drive/folders/$FOLDER_ID" --output "$ZIP_FILE" --quiet; then
+    #if gdown --folder "https://drive.google.com/drive/folders/$DRIVE_ID" --output "$ZIP_FILE" --quiet; then
+    # Download the pre-zipped folder from google drive
+    if gdown "$DRIVE_ID" --output "$ZIP_FILE"; then
         log "Download completed. Extracting archive..."
         
         # Extract the zip file to the biodata directory
@@ -122,6 +136,6 @@ main() {
 }
 
 # Run main function
-# main "$@"
-mkdir -p $BIODATA_DIR
-echo "Skipping download for now..."
+main "$@"
+#mkdir -p $BIODATA_DIR
+#echo "Skipping download for now..."
