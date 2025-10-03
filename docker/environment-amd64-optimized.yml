@@ -41,6 +41,7 @@ dependencies:
 
   # Essential bioinformatics tools
   - bioconda::samtools
+  - bioconda::bedtools
   - bioconda::prodigal
   - bioconda::cd-hit
   - bioconda::bowtie2
@@ -49,7 +50,6 @@ dependencies:
   - bioconda::mmseqs2
   - bioconda::minimap2
   - bioconda::seqkit
-  - bioconda::flye
   - bioconda::fastp
   - bioconda::bwa
   - bioconda::blast
@@ -61,6 +61,7 @@ dependencies:
   - bioconda::spades
 
   # Nanopore tools
+  - bioconda::flye
   - bioconda::nanoplot
   - bioconda::filtlong
   - bioconda::medaka

@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Script to download biodata from Google Drive
-# Only downloads if /biodata is empty to avoid unnecessary re-downloads
+# Script to download biodata resources from Google Drive
+# Only downloads if /biodata/resources does not exist to avoid unnecessary re-downloads
 
 set -e  # Exit on any error
 
-# Google Drive folder URL
+# Google Drive URL for the resource folder zip archive
 DRIVE_URL="https://drive.google.com/file/d/1d4TgvuMY6xW0KNG9POelbt1Hkfj076qM/view?usp=drive_link"
 BIODATA_DIR="/biodata"
 RESOURCES_DIR="/biodata/resources"
@@ -86,7 +86,7 @@ main() {
     ## Download the folder contents as a zip file (much faster than individual files)
     #log "Downloading Google Drive folder as zip archive to $BIODATA_DIR..."
     #log "This may take a while depending on the folder size..."
-    log "Downloading resources folder as pre-zipped archive from Google Drive to $BIODATA_DIR..."
+    log "Downloading resources folder as zip archive from Google Drive to $BIODATA_DIR..."
     
     # Create a temporary directory for the zip file
     TEMP_DIR=$(mktemp -d)
