@@ -39,6 +39,9 @@ dependencies:
   - conda-forge::r-taxonomizr
   - conda-forge::r-languageserver
 
+  # R Bioconductor packages
+  - bioconda::bioconductor-maaslin2
+
   # Essential bioinformatics tools
   - bioconda::samtools
   - bioconda::bedtools
@@ -68,6 +71,3 @@ dependencies:
   - bioconda::lrge
   - bioconda::dnaapler
   - bioconda::polypolish
-
-  # R Bioconductor packages
-  - bioconda::bioconductor-maaslin2
