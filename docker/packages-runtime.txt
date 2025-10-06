@@ -40,3 +40,6 @@ fonts-noto-color-emoji
 
 # Essential utilities (consider removing if not needed)
 imagemagick
+
+# Non-Essential packages
+git
