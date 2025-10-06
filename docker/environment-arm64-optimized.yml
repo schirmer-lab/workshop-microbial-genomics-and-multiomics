@@ -39,6 +39,8 @@ dependencies:
   # - conda-forge::r-fossil
   # - conda-forge::r-taxonomizr
   - conda-forge::r-languageserver
+  - conda-forge::r-compositions
+  - conda-forge::r-psych
 
   # Essential bioinformatics tools
   - bioconda::samtools
