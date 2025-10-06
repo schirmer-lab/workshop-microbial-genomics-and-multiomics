@@ -127,9 +127,6 @@ ipython_config.py
 docker-compose*.yml
 *.pid
 
-# Devcontainer
-.devcontainer/
-.devcontainer.json
 
 #------------------------------------------------------------------------------
 # Logs and temp files
