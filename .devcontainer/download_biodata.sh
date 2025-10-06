@@ -6,7 +6,7 @@
 set -e  # Exit on any error
 
 # Google Drive URL for the resource folder zip archive
-DRIVE_URL="https://drive.google.com/file/d/1RvntudS4kDRhcoewTfur90Ft49QN1JRt/view?usp=drive_link"
+DRIVE_URL="https://drive.google.com/file/d/1U_wUnY-veNyYro1UqxI4JvwBImREnm38/view?usp=drive_link"
 BIODATA_DIR="/biodata"
 RESOURCES_DIR="/biodata/resources"
 
