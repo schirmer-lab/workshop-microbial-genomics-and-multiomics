@@ -229,7 +229,7 @@ class PlottingAccessor:
                 f"Feature '{feature_name}' not found in mds.var column '{mds.var_key}'."
             )
 
-        abundance_df = feature_mds.X.to_long().collect()
+        abundance_df = feature_mds.X.to_long(include_zeros=True).collect()
         meta_df = feature_mds.obs.select([feature_mds.obs_key, x_axis_col])
 
         plot_df = abundance_df.join(meta_df, on=feature_mds.obs_key)
@@ -261,17 +261,112 @@ class PlottingAccessor:
         plot_title = (
             title or f"Sqrt Abundance of {feature_name} by {x_axis_col}"
         )
+        min_nonzero = plot_df.filter(pl.col("abundance") > 0)["abundance"].min()
+        pseudo_value = min_nonzero / 2
+        # Replace zeros with pseudo-count
+        plot_df_pseudo0s = plot_df.with_columns(
+            pl.when(pl.col("abundance") == 0)
+            .then(pseudo_value)
+            .otherwise(pl.col("abundance"))
+            .alias("abundance")
+        )
 
         fig = px.box(
-            plot_df,
+            plot_df_pseudo0s,
             x=x_axis_col,
-            y="sqrt_abundance",
+            y="abundance",
             points="outliers",
             title=plot_title,
             color=x_axis_col,
             color_discrete_map=color_map,
+            log_y=True,
         )
+        fig.update_layout(
+            yaxis=dict(
+                type='log',
+                title='Abundance (log scale)'
+            )
+        )
+        # fig.update_traces(marker_size=point_size, selector=dict(type="box"))
         fig.update_traces(marker_size=point_size, selector=dict(type="box"))
+        fig.show()
+
+    def barplot(
+        self,
+        feature_name: str,
+        x_axis_col: str,
+        feature_type_col: str | None = None,
+        title: str | None = None,
+        color_map: dict[str, str] | None = {
+            "Healthy": "#2166ac",
+            "nonIBD": "#2166ac",
+            "CD": "#b2182b",
+            "UC": "#d6604d",
+            "CRC": "#762a83",
+            "MP": "#9970ab",
+            "adenoma": "#c2a5cf",
+        },
+    ):
+        """
+        # ...existing docstring...
+        """
+        mds = self._mds
+
+        if feature_type_col and mds.var_key != feature_type_col:
+            mds = mds.groupby.var(feature_type_col).agg("sum")
+
+        feature_mds = mds.filter.var(pl.col(mds.var_key) == feature_name)
+
+        if feature_mds.n_vars == 0:
+            raise ValueError(
+                f"Feature '{feature_name}' not found in mds.var column '{mds.var_key}'."
+            )
+
+        abundance_df = feature_mds.X.to_long(include_zeros=True).collect()
+        meta_df = feature_mds.obs.select([feature_mds.obs_key, x_axis_col])
+
+        plot_df = abundance_df.join(meta_df, on=feature_mds.obs_key)
+
+        # Calculate mean values for each group - remove .collect()
+        plot_df = (
+            plot_df.group_by(x_axis_col)
+            .agg(pl.mean("abundance").alias("mean_abundance"))
+        )
+
+        # Reorder DataFrame according to color_map keys if provided
+        if color_map:
+            color_keys = list(color_map.keys())
+            plot_df = plot_df.filter(pl.col(x_axis_col).is_in(color_keys))
+            order_mapping = {cat: i for i, cat in enumerate(color_keys)}
+            plot_df = (
+                plot_df.with_columns(
+                    pl.col(x_axis_col)
+                    .map_elements(
+                        lambda x: order_mapping.get(x, len(color_keys)),
+                        return_dtype=pl.Int64,
+                    )
+                    .alias("_order")
+                )
+                .sort("_order")
+                .drop("_order")
+            )
+
+        plot_title = title or f"Mean Abundance of {feature_name} by {x_axis_col}"
+
+        fig = px.bar(
+            plot_df,
+            x=x_axis_col,
+            y="mean_abundance",
+            title=plot_title,
+            color=x_axis_col,
+            color_discrete_map=color_map,
+        )
+
+        fig.update_layout(
+            yaxis=dict(title="Mean Abundance"),
+            showlegend=False  # Hide legend since colors are already shown in bars
+        )
+
         fig.show()
 
     def lollipop(
