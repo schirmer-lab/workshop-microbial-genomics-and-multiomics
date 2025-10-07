@@ -7,6 +7,7 @@ set -e  # Exit on any error
 
 # Google Drive URL for the resource folder zip archive
 DRIVE_URL="https://drive.google.com/file/d/1U_wUnY-veNyYro1UqxI4JvwBImREnm38/view?usp=drive_link"
+ZENODO_URL="https://zenodo.org/records/17285503/files/resources-251007_2200.zip?download=1"
 BIODATA_DIR="/biodata"
 RESOURCES_DIR="/biodata/resources"
 
@@ -94,8 +95,41 @@ main() {
 
     # Download the entire folder as a zip file
     #if gdown --folder "https://drive.google.com/drive/folders/$DRIVE_ID" --output "$ZIP_FILE" --quiet; then
-    # Download the pre-zipped folder from google drive
+    # Download the pre-zipped folder from google drive  
     if gdown "$DRIVE_ID" --output "$ZIP_FILE"; then
+        log "Download completed. Extracting archive..."
+
+        # Extract the zip file to the biodata directory
+        log "Extracting archive..."
+        if unzip -q "$ZIP_FILE" -d "$BIODATA_DIR"; then
+            log "Archive extracted successfully!"
+        else
+            log "ERROR: Failed to extract archive. Please check if the download was successful."
+            exit 1
+        fi
+
+        # Clean up temporary files
+        rm -rf "$TEMP_DIR"
+
+        # Check if extraction was successful
+        if [ "$(ls -A "$BIODATA_DIR" 2>/dev/null)" ]; then
+            log "Download completed successfully!"
+
+            # List downloaded contents
+            log "Downloaded contents:"
+            ls -la "$BIODATA_DIR"
+
+            # Set proper permissions for cross-platform compatibility
+            log "Setting proper permissions..."
+            find "$BIODATA_DIR" -type d -exec chmod 777 {} + 2>/dev/null || true
+            find "$BIODATA_DIR" -type f -exec chmod 666 {} + 2>/dev/null || true
+
+            log "Biodata setup completed successfully!"
+        else
+            log "ERROR: Extraction completed but no files found in $BIODATA_DIR"
+            exit 1
+        fi
+    elif wget --no-hsts "$ZENODO_URL" -O "$ZIP_FILE"; then
         log "Download completed. Extracting archive..."
 
         # Extract the zip file to the biodata directory
