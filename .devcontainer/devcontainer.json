@@ -1,12 +1,21 @@
 {
-  "name": "Course Pilot - R with Jupyter",
+  "name": "Environmental Multi-omics Workshop",
 
-  // Option 1: Use published Docker image (default)
-  "image": "schirmerlab/biodev:1.1.3",
+  // Built from schirmer-lab/docker-images -> schirmerlab/multiomics26/. How to
+  // build and release it is documented there, not here. There is no "dockerFile"
+  // alternative: the build context lives in that other repository.
+  //
+  // A ".SNAPSHOT" tag is a local build and is never pushed to Docker Hub, so a
+  // Codespace cannot pull one. Only commit a released tag.
+  "image": "schirmerlab/workshop-multiomics:26.07.29",
 
-  // Option 2: Build locally (uncomment the lines below and comment out the "image" line above)
-  // "dockerFile": "../docker/Dockerfile.optimized",
-  // "context": "../docker",
+  // Codespaces machine sizing. day3_lab5 runs SPAdes with --memory 16 and Flye
+  // with --threads 12; the 2-core / 8 GB default machine cannot satisfy that.
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "16gb",
+    "storage": "32gb"
+  },
 
   // Provide a command to keep container running
   "overrideCommand": true,
@@ -22,8 +31,10 @@
   // Handle cross-platform file permissions
   "remoteUser": "root",
 
-  // Comprehensive permission setup and biodata download for seamless host-container file operations
-  "postCreateCommand": "bash -c 'mkdir -p /biodata && chmod 777 /biodata && echo \"# File permission settings for cross-platform compatibility\" >> /root/.bashrc && echo \"umask 0000\" >> /root/.bashrc && echo \"export JUPYTER_ALLOW_INSECURE_WRITES=1\" >> /root/.bashrc && bash ${containerWorkspaceFolder}/.devcontainer/download_biodata.sh && find /biodata -type d -exec chmod 777 {} + 2>/dev/null || true && find /biodata -type f -exec chmod 666 {} + 2>/dev/null || true'",
+  // Permissions, then the data download, then the Metabiome kernel for day3_lab2.
+  // The Metabiome step is deliberately non-fatal: if it fails, every other lab
+  // still works and the warning says how to retry it.
+  "postCreateCommand": "bash -c 'mkdir -p /biodata && chmod 777 /biodata && echo \"# File permission settings for cross-platform compatibility\" >> /root/.bashrc && echo \"umask 0000\" >> /root/.bashrc && echo \"export JUPYTER_ALLOW_INSECURE_WRITES=1\" >> /root/.bashrc && bash ${containerWorkspaceFolder}/.devcontainer/download_biodata.sh && { bash ${containerWorkspaceFolder}/.devcontainer/setup_metabiome.sh || echo \"WARNING: Metabiome setup failed -- day3_lab2 has no kernel. Re-run .devcontainer/setup_metabiome.sh by hand.\"; } && find /biodata -type d -exec chmod 777 {} + 2>/dev/null || true && find /biodata -type f -exec chmod 666 {} + 2>/dev/null || true'",
 
   "customizations": {
     "vscode": {
@@ -36,13 +47,37 @@
       "settings": {
         "python.defaultInterpreterPath": "/opt/conda/bin/python",
         "python.terminal.activateEnvironment": false,
-        "r.rterm.linux": "/usr/bin/R",
-        "r.rpath.linux": "/usr/bin/R",
+
+        // Suppresses the Python extension's "Python is not installed" notice,
+        // which offers to install an interpreter. It is wrong here: the image
+        // ships Python 3.10 at /opt/conda/bin/python, first on PATH, and that is
+        // what defaultInterpreterPath above points at. The image has micromamba
+        // but no `conda` binary, so the extension's conda locator finds nothing
+        // to report and can fall back to that warning.
+        "python.disableInstallationCheck": true,
+
+        // Must point at the conda R -- that is the R backing the IRkernel and the
+        // only one with tidyverse / vegan / Maaslin2 / languageserver installed.
+        // These previously pointed at /usr/bin/R (Ubuntu's apt r-base), which had
+        // no packages at all. Mixing the two R installations is the likely source
+        // of the "lazy-load database is corrupt" errors in day1_lab1.
+        "r.rterm.linux": "/opt/conda/bin/R",
+        "r.rpath.linux": "/opt/conda/bin/R",
         "r.lsp.enabled": true,
         "r.bracketedPaste": true,
         "jupyter.jupyterServerType": "local",
+
+        // Kernels VS Code may connect to without asking. Every notebook declares
+        // one of these in metadata.kernelspec, which is what lets the Jupyter
+        // extension pre-select it instead of showing "Select Kernel" on a fresh
+        // Codespace. Keep the names in sync with the notebooks:
+        //   ir        -> all R notebooks
+        //   python3   -> all Python notebooks except day3_lab2
+        //   metabiome -> day3_lab2 only; built by setup_metabiome.sh on create
         "jupyter.kernels.trusted": [
-          "/opt/conda/share/jupyter/kernels/ir"
+          "/opt/conda/share/jupyter/kernels/ir",
+          "/opt/conda/share/jupyter/kernels/python3",
+          "/usr/local/share/jupyter/kernels/metabiome"
         ],
         "terminal.integrated.defaultProfile.linux": "bash"
       }
