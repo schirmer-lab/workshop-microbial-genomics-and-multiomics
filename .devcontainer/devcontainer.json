@@ -7,7 +7,14 @@
   //
   // A ".SNAPSHOT" tag is a local build and is never pushed to Docker Hub, so a
   // Codespace cannot pull one. Only commit a released tag.
-  "image": "schirmerlab/workshop-multiomics:26.07.29",
+  //
+  // The tag MUST be a multi-arch manifest list. 26.07.29 was pushed as a
+  // single linux/arm64 image (a plain `docker push` of an Apple Silicon build),
+  // and every Codespace died with `exec /bin/sh: exec format error` -- the
+  // Codespaces host is amd64. Check before pinning:
+  //     docker buildx imagetools inspect <image>:<tag>
+  // and require both linux/amd64 and linux/arm64 in the output.
+  "image": "schirmerlab/workshop-multiomics:26.07.29.1",
 
   // Codespaces machine sizing. day3_lab5 runs SPAdes with --memory 16 and Flye
   // with --threads 12; the 2-core / 8 GB default machine cannot satisfy that.
