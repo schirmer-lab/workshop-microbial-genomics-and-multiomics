@@ -61,7 +61,7 @@ The dev container pulls a pre-built image from Docker Hub — nothing is built o
 | Versioning | date-based `YY.MM.DD`, with `.SNAPSHOT` until a build is verified |
 | Architectures | `linux/amd64`, `linux/arm64` (Apple Silicon) |
 
-> Previously `schirmerlab/biodev` (`1.1.x`). The pin is currently a local `.SNAPSHOT` build under verification — it is **not on Docker Hub**, so a Codespace created from this commit cannot start. Release it (see the checklist in `devcontainer.json`) before pushing to `main`.
+> Previously `schirmerlab/biodev` (`1.1.x`). Never commit a `.SNAPSHOT` tag: those are local builds, are not pushed to Docker Hub, and a Codespace cannot pull one.
 
 > The image definition lives in a **separate repository**. It used to be in a `docker/` directory here, but was moved out in October 2025. There is no `docker/` directory in this repo.
 
@@ -85,7 +85,7 @@ If a download fails or you want to refresh it, delete `/biodata/resources` and r
 
 ## Kernels
 
-The container ships exactly two kernels, and every notebook declares the one it needs in its own metadata:
+The image ships two kernels and a third is built on container create. Every notebook declares the one it needs in its own metadata:
 
 | Kernel | Shown as | Used by |
 |---|---|---|
@@ -132,8 +132,8 @@ If you still see this popup, simply click "Yes" or "No" based on your preference
 | `day2_lab2_metagenomic_assembly.ipynb` | Python | Metagenomic assembly |
 | `day3_lab1_gene_centric_analysis.ipynb` | Python | Gene-centric analysis |
 | `day3_lab2_magraph_tutorial.ipynb` | **Metabiome** | Operon abundance across cohorts |
-| `day3_lab3_protein_structure.ipynb` | R | Protein structure / Foldseek |
-| `day3_lab4_metabolomics.ipynb` | R | Metabolomics correlation |
+| `protein_structure.ipynb` | R | Protein structure / Foldseek |
+| `metabolomics.ipynb` | R | Metabolomics correlation |
 | `day3_lab5_bacterial_genome_analysis.ipynb` | Python | Bacterial genome assembly and polishing |
 
 `day3_lab2` runs on its own kernel, built by `.devcontainer/setup_metabiome.sh` during container creation — no manual step. If the kernel is missing (the warning appears in the container-create log), re-run that script; it is idempotent.

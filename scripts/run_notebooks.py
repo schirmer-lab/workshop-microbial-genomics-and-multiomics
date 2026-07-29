@@ -52,7 +52,11 @@ def color(txt: str, c: str, enabled: bool) -> str:
 
 
 def discover(only: list[str] | None) -> list[Path]:
-    nbs = sorted(p for p in REPO.glob("day*.ipynb"))
+    # Every notebook at the repository root. Deliberately not "day*.ipynb": that
+    # silently dropped protein_structure.ipynb and metabolomics.ipynb when they
+    # lost their dayN_labN prefix, and a verification run that quietly covers
+    # less than you think is worse than one that fails loudly.
+    nbs = sorted(p for p in REPO.glob("*.ipynb"))
     if only:
         nbs = [p for p in nbs if any(o in p.name for o in only)]
     return nbs
