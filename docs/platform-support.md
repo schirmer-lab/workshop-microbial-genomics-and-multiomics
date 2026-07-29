@@ -50,7 +50,7 @@ The packages actually used for analysis across all labs are `ggplot2`, `tidyvers
 
 The arm64 solve only proves everything *installs*. Runtime behaviour was checked separately with `./scripts/run_notebooks.sh` (see the README), which executes every notebook end to end and writes a per-cell failure report.
 
-**All 12 notebooks pass on Apple Silicon (`linux/arm64`), 2026-07-29.** That includes the notebook that does the most real computation, `day3_lab5` — `filtlong`, `lrge`, `flye`, `medaka`, `trim_galore`, `fastqc`, `spades`, `bwa`, `polypolish`, `dnaapler`, `minimap2`, `NanoPlot` — in 18 minutes, plus `day2_lab2` (MEGAHIT, 2.5 min), `day3_lab1` (prodigal, cd-hit, bowtie2, 5 min), `day3_lab3` (Foldseek) and `day2_lab1` (MaAsLin2). Nothing in the toolchain misbehaves on arm64.
+**All 12 notebooks pass on Apple Silicon (`linux/arm64`), 2026-07-29.** That includes the notebook that does the most real computation, `day3_lab5` — `filtlong`, `lrge`, `flye`, `medaka`, `trim_galore`, `fastqc`, `spades`, `bwa`, `polypolish`, `dnaapler`, `minimap2`, `NanoPlot` — in 18 minutes, plus `day2_lab2` (MEGAHIT, 2.5 min), `day3_lab1` (prodigal, cd-hit, bowtie2, 5 min), `protein_structure.ipynb` (Foldseek) and `day2_lab1` (MaAsLin2). Nothing in the toolchain misbehaves on arm64.
 
 The run also confirmed the table above at runtime rather than by dependency solve: `day1_lab0` printed `✗ taxonomizr failed to load` and `day1_lab1_test_setup_R_env` printed `❌ fossil is missing`. Those two lines are the *entire* observable arm64 difference.
 
