@@ -1,5 +1,5 @@
 {
-  "name": "Environmental Multi-omics Workshop",
+  "name": "Multi-omics Workshop",
 
   // Built from schirmer-lab/docker-images -> schirmerlab/multiomics26/. How to
   // build and release it is documented there, not here. There is no "dockerFile"
