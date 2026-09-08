@@ -7,7 +7,7 @@ set -e  # Exit on any error
 
 # Google Drive URL for the resource folder zip archive
 DRIVE_URL="https://drive.google.com/file/d/1U_wUnY-veNyYro1UqxI4JvwBImREnm38/view?usp=drive_link"
-ZENODO_URL="https://zenodo.org/records/17285503/files/resources-251007_2200.zip?download=1"
+ZENODO_URL="https://zenodo.org/records/22661198/files/resources-260908_1500.zip?download=1"
 BIODATA_DIR="/biodata"
 RESOURCES_DIR="/biodata/resources"
 PREFERRED_HOST="ZENODO"  # Options: "GOOGLE_DRIVE" or "ZENODO"
@@ -99,6 +99,8 @@ main() {
         # Change to biodata directory
         cd "$BIODATA_DIR"
 
+        # Create a temporary directory for the zip file
+        TEMP_DIR=$(mktemp -d)
         ZIP_FILE="$TEMP_DIR/resources.zip"
 
         # Download the entire folder as a zip file
@@ -117,6 +119,9 @@ main() {
 
             # Check if extraction was successful
             check_extraction_and_set_permissions "$BIODATA_DIR"
+
+            # Clean up temporary files
+            rm -rf "$TEMP_DIR"
             
         else
             log "ERROR: Download failed. Please check your internet connection and try again."
