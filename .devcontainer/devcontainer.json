@@ -28,11 +28,12 @@
   "overrideCommand": true,
 
   // Create data directory on host before container starts
-  "initializeCommand": "mkdir -p ${localEnv:HOME}/biodata",
+  // "initializeCommand": "mkdir -p ${localEnv:HOME}${localEnv:USERPROFILE}/biodata",
+  // skipped, because Docker will create the host directory automatically if it is missing
 
   // Mount user's data directory with proper user mapping
   "mounts": [
-    "type=bind,source=${localEnv:HOME}/biodata,target=/biodata,consistency=cached"
+    "type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/biodata,target=/biodata,consistency=cached"
   ],
 
   // Handle cross-platform file permissions
