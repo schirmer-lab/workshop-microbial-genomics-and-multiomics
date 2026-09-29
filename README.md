@@ -48,12 +48,12 @@ If you still see this popup, simply click "Yes" or "No" based on your preference
 
 | Notebook | Kernel | Topic |
 |---|---|---|
-| `R_intro_0_test_setup.ipynb` | R | Environment self-test |
-| `R_intro_3_basics.ipynb` | R | Introduction to R |
+| `r_intro_0_test_setup.ipynb` | R | Environment self-test |
+| `r_intro_1_basics.ipynb` | R | Introduction to R |
 | `microbial_profiling_metaphlan.ipynb` | Python | Reference-based taxonomic profiling |
 | `mgx_visualization.ipynb` | R | Metagenomic data visualization |
 | `multivariate_analysis_maaslin.ipynb` | R | Differential abundance with MaAsLin2 |
-| `MGX_assembly.ipynb` | Python | Metagenomic assembly |
+| `mgx_assembly_{1,2}.ipynb` | Python | Metagenomic assembly |
 | `isolate_genome_analysis.ipynb` | Python | Bacterial genome assembly and polishing |
 | `mgx_gene_centric_analysis.ipynb` | Python | Gene-centric analysis |
 | `multi_cohort_analysis_metagear.ipynb` | **Metabiome** | Operon abundance across cohorts |
